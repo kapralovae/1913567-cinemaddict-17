@@ -3,11 +3,12 @@ import { humanizeDate } from '../util.js';
 
 
 const createCardFilm = (movie) => {
-  const {filmInfo} = movie;
+  const {filmInfo, id} = movie;
 
   return (`
   <article class="film-card">
     <a class="film-card__link">
+      <p style="display:none">${id}</p>
       <h3 class="film-card__title">${filmInfo.title}</h3>
       <p class="film-card__rating">${filmInfo.totalRating}</p>
       <p class="film-card__info">

@@ -1,4 +1,4 @@
-import { getRandomInt } from '../util';
+import { getRandomInt } from '../util.js';
 
 
 const postersArray = ['made-for-each-other.png',
@@ -24,8 +24,10 @@ const titleFilm = ['Зеленая миля',
   'Интерстеллар'
 ];
 
+
 export const genetateCardMovie = () => ({
-  'id': '0',
+
+  'id': `${getRandomInt(1, 5)}`,
   'comments': [
     // $Comment.id$, $Comment.id$
   ],
@@ -59,3 +61,13 @@ export const genetateCardMovie = () => ({
     'favorite': false
   }
 });
+
+// const commentsList = new CommentsModel;
+
+// commentsList.getComment().forEach((element)=>{
+//   if (element.id === genetateCardMovie().id) {
+//     genetateCardMovie().comments.push(element);
+//   }
+// });
+
+
