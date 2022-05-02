@@ -1,4 +1,5 @@
 import { getRandomInt } from '../util.js';
+import CommentsModel from '../model/comments-model.js';
 
 
 const postersArray = ['made-for-each-other.png',
@@ -24,50 +25,47 @@ const titleFilm = ['Зеленая миля',
   'Интерстеллар'
 ];
 
+const commentsList = new CommentsModel();
 
-export const genetateCardMovie = () => ({
 
-  'id': `${getRandomInt(1, 5)}`,
-  'comments': [
-    // $Comment.id$, $Comment.id$
-  ],
-  'filmInfo': {
-    'title': titleFilm[getRandomInt(0, 4)],
-    'alternative_title': 'Laziness Who Sold Themselves',
-    'totalRating': 5.3,
-    'poster': `images/posters/${postersArray[getRandomInt(0, 6)]}`,
-    'age_rating': 0,
-    'director': 'Tom Ford',
-    'writers': [
-      'Takeshi Kitano'
+export const genetateCardMovie = () => {
+  const id = getRandomInt(1, 5);
+  return{
+
+    'id': id,
+    'comments': [
+      ...commentsList.getCommentsById(id)
     ],
-    'actors': [
-      'Morgan Freeman'
-    ],
-    'release': {
-      'date': '2019-05-11T00:00:00.000Z',
-      'release_country': 'Finland'
+    'filmInfo': {
+      'title': titleFilm[getRandomInt(0, 4)],
+      'alternative_title': 'Laziness Who Sold Themselves',
+      'totalRating': 5.3,
+      'poster': `images/posters/${postersArray[getRandomInt(0, 6)]}`,
+      'age_rating': 0,
+      'director': 'Tom Ford',
+      'writers': [
+        'Takeshi Kitano'
+      ],
+      'actors': [
+        'Morgan Freeman'
+      ],
+      'release': {
+        'date': '2019-05-11T00:00:00.000Z',
+        'release_country': 'Finland'
+      },
+      'runtime': 77,
+      'genre': [
+        'Comedy'
+      ],
+      'description': description[getRandomInt(0, 4)],
     },
-    'runtime': 77,
-    'genre': [
-      'Comedy'
-    ],
-    'description': description[getRandomInt(0, 4)],
-  },
-  'user_details': {
-    'watchlist': false,
-    'already_watched': true,
-    'watching_date': '2019-04-12T16:12:32.554Z',
-    'favorite': false
-  }
-});
-
-// const commentsList = new CommentsModel;
-
-// commentsList.getComment().forEach((element)=>{
-//   if (element.id === genetateCardMovie().id) {
-//     genetateCardMovie().comments.push(element);
-//   }
-// });
+    'user_details': {
+      'watchlist': false,
+      'already_watched': true,
+      'watching_date': '2019-04-12T16:12:32.554Z',
+      'favorite': false
+    }
+  };
+};
 
 

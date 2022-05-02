@@ -8,8 +8,8 @@ import NewCommentView from '../view/comment-in-popup-view.js';
 
 export default class ContainerFilmsPresenter {
 
-  sectioinFilms = new NewSectionFilmsView;
-  containerListFilm = new ContainerListFilmView;
+  sectioinFilms = new NewSectionFilmsView();
+  containerListFilm = new ContainerListFilmView();
   // newComments = new NewCommentView;
 
 
@@ -26,8 +26,9 @@ export default class ContainerFilmsPresenter {
 
     for (let i = 0; i < this.sectionMovie.length; i++) {
       render(new NewCardFilmView(this.sectionMovie[i]), this.containerListFilm.getElement());
+
     }
-    render(new LoadMoreButtonView, this.sectioinFilms.getElement());
+    render(new LoadMoreButtonView(), this.sectioinFilms.getElement());
 
 
   };

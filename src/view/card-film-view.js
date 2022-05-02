@@ -3,7 +3,7 @@ import { humanizeDate } from '../util.js';
 
 
 const createCardFilm = (movie) => {
-  const {filmInfo, id} = movie;
+  const {filmInfo, id, comments} = movie;
 
   return (`
   <article class="film-card">
@@ -18,7 +18,7 @@ const createCardFilm = (movie) => {
       </p>
       <img src="./${filmInfo.poster}" alt="" class="film-card__poster">
       <p class="film-card__description">${filmInfo.description}</p>
-      <span class="film-card__comments">89 comments</span>
+      <span class="film-card__comments">${comments.length} comments</span>
     </a>
     <div class="film-card__controls">
       <button class="film-card__controls-item film-card__controls-item--add-to-watchlist film-card__controls-item--active" type="button">Add to watchlist</button>

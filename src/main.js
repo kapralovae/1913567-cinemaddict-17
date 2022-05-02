@@ -10,16 +10,16 @@ import NewPopupFilmView from './view/popup-film-view.js';
 
 const headerLogo = document.querySelector('.header');
 const main = document.querySelector('main');
+
+const containerFilmsPresenter = new ContainerFilmsPresenter();
+const movieModel = new MovieModel();
+
+
+render(new NewRankUserView(), headerLogo);
+render(new NewNavigationView(), main, RenderPosition.BEFOREEND );
+render(new NewFilterView(), main, RenderPosition.BEFOREEND );
+render(new NewPopupFilmView(), document.body, RenderPosition.BEFOREEND);
 const commentList = document.querySelector('.film-details__comments-list');
-
-const containerFilmsPresenter = new ContainerFilmsPresenter;
-const movieModel = new MovieModel;
-
-
-render(new NewRankUserView, headerLogo);
-render(new NewNavigationView, main, RenderPosition.BEFOREEND );
-render(new NewFilterView, main, RenderPosition.BEFOREEND );
-render(new NewPopupFilmView, document.body, RenderPosition.BEFOREEND);
 
 
 containerFilmsPresenter.init(main, movieModel);
