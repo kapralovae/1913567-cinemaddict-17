@@ -25,6 +25,31 @@ const titleFilm = ['Зеленая миля',
   'Интерстеллар'
 ];
 
+const genreFilm = [
+  'Comedy',
+  'Triller',
+  'horror',
+  'Adventure',
+  'Detective',
+];
+const actorsFilm = [
+  'Morgan Freeman',
+  'Vin Dizel',
+  'Tom Holand',
+  'Bred Pit',
+  'Robert Downy Jr',
+
+];
+
+const country = [
+  'Russia',
+  'Finland',
+  'Germany',
+  'Norway',
+  'Sweden'
+];
+
+
 const commentsList = new CommentsModel();
 
 
@@ -39,24 +64,20 @@ export const genetateCardMovie = () => {
     'filmInfo': {
       'title': titleFilm[getRandomInt(0, 4)],
       'alternative_title': 'Laziness Who Sold Themselves',
-      'totalRating': 5.3,
+      'totalRating': getRandomInt(0, 10),
       'poster': `images/posters/${postersArray[getRandomInt(0, 6)]}`,
-      'age_rating': 0,
+      'age_rating': getRandomInt(0, 18),
       'director': 'Tom Ford',
       'writers': [
         'Takeshi Kitano'
       ],
-      'actors': [
-        'Morgan Freeman'
-      ],
+      'actors': actorsFilm.slice(0,[getRandomInt(0, actorsFilm.length - 1)]),
       'release': {
         'date': '2019-05-11T00:00:00.000Z',
-        'release_country': 'Finland'
+        'releaseCountry': country.slice(0,[getRandomInt(0, country.length - 1)])
       },
       'runtime': 77,
-      'genre': [
-        'Comedy'
-      ],
+      'genre': genreFilm.slice(0,[getRandomInt(0, genreFilm.length - 1)]),
       'description': description[getRandomInt(0, 4)],
     },
     'user_details': {
