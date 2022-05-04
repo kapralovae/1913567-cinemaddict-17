@@ -1,7 +1,6 @@
 import {createElement} from '../render.js';
 import { humanizeDate } from '../util.js';
 
-
 const createComment = (comments) => {
   const {comment, date, emotion, author} = comments;
 
@@ -26,22 +25,25 @@ const createComment = (comments) => {
 
 export default class NewCommentView {
 
+  #comment = null;
+  #element = null;
+
   constructor(comment) {
-    this.comment = comment;
+    this.#comment = comment;
   }
 
-  getTemplate() {
-    return createComment(this.comment);
+  get template() {
+    return createComment(this.#comment);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

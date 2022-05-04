@@ -1,8 +1,8 @@
 import {createElement} from '../render.js';
 import { humanizeDate } from '../util.js';
 
-
 const createCardFilm = (movie) => {
+
   const {filmInfo, id, comments} = movie;
 
   return (`
@@ -30,22 +30,25 @@ const createCardFilm = (movie) => {
 
 export default class NewCardFilmView {
 
+  #movie = null;
+  #element = null;
+
   constructor(movie) {
-    this.movie = movie;
+    this.#movie = movie;
   }
 
-  getTemplate() {
-    return createCardFilm(this.movie);
+  get template() {
+    return createCardFilm(this.#movie);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
