@@ -5,19 +5,31 @@ import NewCardFilmView from '../view/card-film-view.js';
 import LoadMoreButtonView from '../view/load-more-button-view.js';
 import NewCommentView from '../view/comment-in-popup-view.js';
 import NewPopupFilmView from '../view/popup-film-view.js';
+import NoMovieView from '../view/no-movie-view.js';
+import NewFilterView from '../view/filter-view.js';
+
+const SHOW_FILM_COUNT_STEP = 5;
 
 export default class ContainerFilmsPresenter {
 
   #sectioinFilms = new NewSectionFilmsView();
   #containerListFilm = new ContainerListFilmView();
+  #loadMoreButton = new LoadMoreButtonView();
   #placeContainer = null;
   #movieModel = null;
   #sectionMovie = [];
+  #renderedMovie = SHOW_FILM_COUNT_STEP;
+  #main = document.querySelector('main');
 
-  #renderMovie = (movie) => {
+  constructor(placeContainer, movieModel) {
+    this.#placeContainer = placeContainer;
+    this.#movieModel = movieModel;
+  }
+
+  #createMovie = (movie) => {
     const movieComponent = new NewCardFilmView(movie);
     render(movieComponent, this.#containerListFilm.element);
-    movieComponent.element.querySelector('a').addEventListener('click', () => {
+    movieComponent.element.querySelector('.film-card__link').addEventListener('click', () => {
       const popupComponent = new NewPopupFilmView(movie);
       render(popupComponent, document.body, RenderPosition.BEFOREEND);
       const commentList = document.querySelector('.film-details__comments-list');
@@ -44,19 +56,30 @@ export default class ContainerFilmsPresenter {
     });
   };
 
-  init = (placeContainer, movieModel) => {
-    this.#placeContainer = placeContainer;
-    this.#movieModel = movieModel;
+  init = () => {
+
     this.#sectionMovie = [...this.#movieModel.movie];
+    //this.#sectionMovie = []; //Проверка заглушки при отсутствии карточек.
+    this.#renderMovie();
+  };
 
-    render(this.#sectioinFilms, this.#placeContainer);
-    render(this.#containerListFilm, this.#sectioinFilms.element);
+  #renderMovie = () => {
 
-    for (let i = 0; i < this.#sectionMovie.length; i++) {
-      this.#renderMovie(this.#sectionMovie[i]);
+    if (this.#sectionMovie.length === 0) {
+      render(new NoMovieView(), this.#placeContainer);
+    } else {
+      render(new NewFilterView(), this.#main, RenderPosition.BEFOREEND );
+      render(this.#sectioinFilms, this.#placeContainer);
+      render(this.#containerListFilm, this.#sectioinFilms.element);
     }
 
-    render(new LoadMoreButtonView(), this.#sectioinFilms.element);
+    for (let i = 0; i < Math.min(this.#sectionMovie.length, SHOW_FILM_COUNT_STEP); i++) {
+      this.#createMovie(this.#sectionMovie[i]);
+    }
+    if (this.#sectionMovie.length > SHOW_FILM_COUNT_STEP) {
+      render(this.#loadMoreButton, this.#sectioinFilms.element);
+      this.#loadMoreButton.element.addEventListener('click', this.#onLoadMoreButtonClick);
+    }
   };
 
   #place = null;
@@ -72,4 +95,19 @@ export default class ContainerFilmsPresenter {
       render(new NewCommentView(this.#sectionComment[i]), this.#place, RenderPosition.BEFOREEND);
     }
   };
+
+  #onLoadMoreButtonClick = (evt) => {
+    evt.preventDefault();
+    this.#sectionMovie
+      .slice(this.#renderedMovie, this.#renderedMovie + SHOW_FILM_COUNT_STEP)
+      .forEach((element) => this.#createMovie(element));
+
+    this.#renderedMovie += SHOW_FILM_COUNT_STEP;
+
+    if (this.#renderedMovie >= this.#sectionMovie.length) {
+      this.#loadMoreButton.element.remove();
+      this.#loadMoreButton.removeElement();
+    }
+  };
 }
+
