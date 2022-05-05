@@ -1,6 +1,6 @@
 import { getRandomInt } from '../util.js';
 import CommentsModel from '../model/comments-model.js';
-
+import { humanizeDate } from '../util.js';
 
 const postersArray = ['made-for-each-other.png',
   'popeye-meets-sinbad.png',
@@ -32,6 +32,7 @@ const genreFilm = [
   'Adventure',
   'Detective',
 ];
+
 const actorsFilm = [
   'Morgan Freeman',
   'Vin Dizel',
@@ -56,13 +57,15 @@ const directors = [
   'Kventin Torantino',
   'David Fincher',
 ];
+
 const writers = [
-  'jonatan Nolan',
+  'Jonatan Nolan',
   'Jim Uls',
   'Hayao Midziyaki',
   'Guy Ritchie',
   'Ivan Atkinson',
 ];
+
 const dates = [
   '2000-05-11T00:00:00.000Z',
   '2005-05-11T00:00:00.000Z',
@@ -70,23 +73,25 @@ const dates = [
   '2015-05-11T00:00:00.000Z',
   '2020-05-11T00:00:00.000Z',
 ];
+
 const timeFilms = [
   90,50,70,48,55,84,60
 ];
 
 const getRuntime = (offer) => {
   const runtime = [];
+
   for (let i = 0; i < offer.length; i++) {
     if(offer[i] % 60 === 0) {
       runtime.push(`${offer[i]/60}h`);
     }
     runtime.push(`${Math.ceil(offer[i]/60)}h ${offer[i] % 60}m`);
   }
+
   return runtime[getRandomInt(0, runtime.length - 1)];
 };
 
 const commentsList = new CommentsModel();
-
 
 export const genetateCardMovie = () => {
   const id = getRandomInt(1, 5);
@@ -101,16 +106,16 @@ export const genetateCardMovie = () => {
       'alternative_title': 'Laziness Who Sold Themselves',
       'totalRating': getRandomInt(0, 10),
       'poster': `images/posters/${postersArray[getRandomInt(0, 6)]}`,
-      'age_rating': getRandomInt(0, 18),
+      'ageRating': getRandomInt(0, 18),
       'director': directors[getRandomInt(0, 4)],
       'writers': writers.slice(0,[getRandomInt(1, actorsFilm.length)]),
-      'actors': actorsFilm.slice(0,[getRandomInt(0, actorsFilm.length - 1)]),
+      'actors': actorsFilm.slice(0,[getRandomInt(1, actorsFilm.length - 1)]),
       'release': {
-        'date': dates[getRandomInt(0, 4)],
-        'releaseCountry': country.slice(0,[getRandomInt(0, country.length - 1)])
+        'date': humanizeDate(dates[getRandomInt(0, 4)]),
+        'releaseCountry': country.slice().splice(getRandomInt(0, country.length - 1), 1)
       },
       'runtime': getRuntime(timeFilms),
-      'genre': genreFilm.slice().splice(getRandomInt(0, genreFilm.length - 1),[getRandomInt(1, 3)]),
+      'genre': genreFilm.slice().splice(getRandomInt(0, genreFilm.length - 1), 1),
       'description': description[getRandomInt(0, 4)],
     },
     'user_details': {
