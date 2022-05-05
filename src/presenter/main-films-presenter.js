@@ -76,6 +76,7 @@ export default class ContainerFilmsPresenter {
     for (let i = 0; i < Math.min(this.#sectionMovie.length, SHOW_FILM_COUNT_STEP); i++) {
       this.#createMovie(this.#sectionMovie[i]);
     }
+
     if (this.#sectionMovie.length > SHOW_FILM_COUNT_STEP) {
       render(this.#loadMoreButton, this.#sectioinFilms.element);
       this.#loadMoreButton.element.addEventListener('click', this.#onLoadMoreButtonClick);

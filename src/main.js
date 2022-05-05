@@ -11,7 +11,7 @@ const movieModel = new MovieModel();
 const containerFilmsPresenter = new ContainerFilmsPresenter(main, movieModel);
 
 render(new NewRankUserView(), headerLogo);
-render(new NewNavigationView(), main, RenderPosition.BEFOREEND );
+render(new NewNavigationView(), main, RenderPosition.BEFOREEND);
 
 containerFilmsPresenter.init();
 

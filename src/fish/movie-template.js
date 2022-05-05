@@ -82,9 +82,11 @@ const getRuntime = (offer) => {
   const runtime = [];
 
   for (let i = 0; i < offer.length; i++) {
+
     if(offer[i] % 60 === 0) {
       runtime.push(`${offer[i]/60}h`);
     }
+
     runtime.push(`${Math.ceil(offer[i]/60)}h ${offer[i] % 60}m`);
   }
 
