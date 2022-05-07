@@ -1,4 +1,4 @@
-import { render, RenderPosition } from '../framework/render.js';
+import { render } from '../framework/render.js';
 import NewSectionFilmsView from '../view/film-section.js';
 import ContainerListFilmView from '../view/film-list-container-view.js';
 import NewCardFilmView from '../view/card-film-view.js';
@@ -37,7 +37,7 @@ export default class ContainerFilmsPresenter {
     };
 
     movieComponent.setClickHandler(()=>{
-      render(popupComponent, this.#placePopupContainer, RenderPosition.BEFOREEND);
+      render(popupComponent, this.#placePopupContainer);
       popupComponent.setClickCloseHandler(onCloseButtonPopupClick);
     });
   };
@@ -52,7 +52,7 @@ export default class ContainerFilmsPresenter {
     if (this.#sectionMovie.length === 0) {
       render(new NoMovieView(), this.#placeContainer);
     } else {
-      render(new NewFilterView(), this.#placeContainer, RenderPosition.BEFOREEND );
+      render(new NewFilterView(), this.#placeContainer);
       render(this.#sectioinFilms, this.#placeContainer);
       render(this.#containerListFilm, this.#sectioinFilms.element);
     }
