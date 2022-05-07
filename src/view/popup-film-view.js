@@ -1,4 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
+import NewCommentView from './comment-in-popup-view.js';
 
 const createPopupFilm = (movie) => {
 
@@ -82,7 +83,10 @@ const createPopupFilm = (movie) => {
           <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
           <ul class="film-details__comments-list">
-
+            ${comments.reduce((template, comment) => {
+      template += new NewCommentView(comment).template;
+      return template;
+    }, '')}
           </ul>
 
           <div class="film-details__new-comment">
@@ -132,4 +136,24 @@ export default class NewPopupFilmView extends AbstractView {
   get template() {
     return createPopupFilm(this.#movie);
   }
+
+
+  setClickCloseHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.film-details__close-btn').addEventListener('click',  this.#clickHandler);
+    document.addEventListener('keydown', this.#handlerKeyDown);
+  };
+
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    document.body.classList.remove('hide-overflow');
+    document.removeEventListener('keydown', this.#handlerKeyDown);
+    this._callback.click();
+  };
+
+  #handlerKeyDown = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      this.#clickHandler(evt);
+    }
+  };
 }

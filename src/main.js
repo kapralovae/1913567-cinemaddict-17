@@ -7,7 +7,7 @@ import MovieModel from './model/movie-model.js';
 const headerLogo = document.querySelector('.header');
 const main = document.querySelector('main');
 const movieModel = new MovieModel();
-const containerFilmsPresenter = new ContainerFilmsPresenter(main, movieModel);
+const containerFilmsPresenter = new ContainerFilmsPresenter(main, document.body, movieModel);
 
 render(new NewRankUserView(), headerLogo);
 render(new NewNavigationView(), main, RenderPosition.BEFOREEND);
