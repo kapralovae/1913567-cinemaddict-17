@@ -1,5 +1,4 @@
-import { render } from './render.js';
-import { RenderPosition } from './render.js';
+import { render, RenderPosition } from './framework/render.js';
 import NewRankUserView from './view/rank-user-view';
 import NewNavigationView from './view/navigation-view.js';
 import ContainerFilmsPresenter from './presenter/main-films-presenter.js';
