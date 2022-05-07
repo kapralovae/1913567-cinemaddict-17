@@ -1,5 +1,4 @@
-import { render } from './render.js';
-import { RenderPosition } from './render.js';
+import { render } from './framework/render.js';
 import NewRankUserView from './view/rank-user-view';
 import NewNavigationView from './view/navigation-view.js';
 import ContainerFilmsPresenter from './presenter/main-films-presenter.js';
@@ -8,10 +7,10 @@ import MovieModel from './model/movie-model.js';
 const headerLogo = document.querySelector('.header');
 const main = document.querySelector('main');
 const movieModel = new MovieModel();
-const containerFilmsPresenter = new ContainerFilmsPresenter(main, movieModel);
+const containerFilmsPresenter = new ContainerFilmsPresenter(main, document.body, movieModel);
 
 render(new NewRankUserView(), headerLogo);
-render(new NewNavigationView(), main, RenderPosition.BEFOREEND);
+render(new NewNavigationView(), main);
 
 containerFilmsPresenter.init();
 

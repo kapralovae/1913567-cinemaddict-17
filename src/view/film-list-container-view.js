@@ -1,23 +1,10 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view';
 
 const createContainerFilms = () => '<div class="films-list__container"></div>';
 
-export default class ContainerListFilmView {
-
-  #element = null;
+export default class ContainerListFilmView extends AbstractView {
 
   get template() {
     return createContainerFilms();
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
