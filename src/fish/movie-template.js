@@ -1,6 +1,7 @@
 import { getRandomInt } from '../util.js';
 import CommentsModel from '../model/comments-model.js';
 import { humanizeDate } from '../util.js';
+import { nanoid } from 'nanoid';
 
 const postersArray = ['made-for-each-other.png',
   'popeye-meets-sinbad.png',
@@ -97,8 +98,9 @@ const commentsList = new CommentsModel();
 
 export const genetateCardMovie = () => {
   const id = getRandomInt(1, 5);
+  const idPresenter = nanoid();
   return{
-
+    'idPresenter': idPresenter,
     'id': id,
     'comments': [
       ...commentsList.getCommentsById(id)

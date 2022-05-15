@@ -1,9 +1,7 @@
-import { render } from '../framework/render.js';
+import { remove, render } from '../framework/render.js';
 import NewSectionFilmsView from '../view/film-section.js';
 import ContainerListFilmView from '../view/film-list-container-view.js';
-// import NewCardFilmView from '../view/card-film-view.js';
 import LoadMoreButtonView from '../view/load-more-button-view.js';
-// import NewPopupFilmView from '../view/popup-film-view.js';
 import NoMovieView from '../view/no-movie-view.js';
 import NewFilterView from '../view/filter-view.js';
 import MoviePresenter from './movie-presenter.js';
@@ -22,28 +20,13 @@ export default class ContainerFilmsPresenter {
   #movieModel = null;
   #sectionMovie = [];
   #renderedMovie = SHOW_FILM_COUNT_STEP;
+  #moviePresenter = new Map();
 
   constructor(placeContainer, placePopupContainer, movieModel) {
     this.#placeContainer = placeContainer;
     this.#placePopupContainer = placePopupContainer;
     this.#movieModel = movieModel;
   }
-
-  // #createMovie = (movie) => {
-  //   const movieComponent = new NewCardFilmView(movie);
-  //   render(movieComponent, this.#containerListFilm.element);
-  //   const popupComponent = new NewPopupFilmView(movie);
-
-  //   const onCloseButtonPopupClick = () => {
-  //     popupComponent.element.remove();
-  //     popupComponent.removeElement();
-  //   };
-
-  //   movieComponent.setClickHandler(()=>{
-  //     render(popupComponent, this.#placePopupContainer);
-  //     popupComponent.setClickCloseHandler(onCloseButtonPopupClick);
-  //   });
-  // };
 
   init = () => {
     this.#renderFilter();
@@ -75,24 +58,9 @@ export default class ContainerFilmsPresenter {
   };
 
   #renderMovie = (movie) => {
-
-    // if (this.#sectionMovie.length === 0) {
-    //   render(this.#noMovieText, this.#placeContainer);
-    // } else {
     const moviePresenter = new MoviePresenter(this.#containerListFilm.element, this.#placePopupContainer);
-    // for (let i = 0; i <= this.#sectionMovie.length - 1; i++) {
     moviePresenter.init(movie);
-    // }
-    // }
-
-    // for (let i = 0; i < Math.min(this.#sectionMovie.length, SHOW_FILM_COUNT_STEP); i++) {
-    //   this.#createMovie(this.#sectionMovie[i]);
-    // }
-
-    // if (this.#sectionMovie.length > SHOW_FILM_COUNT_STEP) {
-    //   render(this.#loadMoreButton, this.#sectioinFilms.element);
-    //   this.#loadMoreButton.setClickHandler(this.#onLoadMoreButtonClick);
-    // }
+    this.#moviePresenter.set(movie.idPresenter, moviePresenter);
   };
 
   #onLoadMoreButtonClick = () => {
@@ -106,6 +74,13 @@ export default class ContainerFilmsPresenter {
       this.#loadMoreButton.element.remove();
       this.#loadMoreButton.removeElement();
     }
+  };
+
+  #clearMovieList = () => {
+    this.#moviePresenter.forEach((presenter) => presenter.destroy());
+    this.#moviePresenter.clear();
+    this.#renderedMovie = SHOW_FILM_COUNT_STEP;
+    remove(this.#loadMoreButton);
   };
 }
 
