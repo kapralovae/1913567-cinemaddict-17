@@ -47,19 +47,22 @@ export default class ContainerFilmsPresenter {
 
   init = () => {
     this.#renderFilter();
-    this.#renderSectionFilm();
 
     this.#sectionMovie = [...this.#movieModel.movie];
-    render(this.#containerListFilm, this.#sectioinFilms.element);
-    // this.#renderMovie();
+    if (this.#sectionMovie.length === 0) {
+      render(this.#noMovieText, this.#placeContainer);
+    } else {
+      this.#renderSectionFilm();
+      render(this.#containerListFilm, this.#sectioinFilms.element);
 
-    for (let i = 0; i < Math.min(this.#sectionMovie.length, SHOW_FILM_COUNT_STEP); i++) {
-      this.#renderMovie(this.#sectionMovie[i]);
-    }
+      for (let i = 0; i < Math.min(this.#sectionMovie.length, SHOW_FILM_COUNT_STEP); i++) {
+        this.#renderMovie(this.#sectionMovie[i]);
+      }
 
-    if (this.#sectionMovie.length > SHOW_FILM_COUNT_STEP) {
-      render(this.#loadMoreButton, this.#sectioinFilms.element);
-      this.#loadMoreButton.setClickHandler(this.#onLoadMoreButtonClick);
+      if (this.#sectionMovie.length > SHOW_FILM_COUNT_STEP) {
+        render(this.#loadMoreButton, this.#sectioinFilms.element);
+        this.#loadMoreButton.setClickHandler(this.#onLoadMoreButtonClick);
+      }
     }
   };
 
@@ -73,14 +76,14 @@ export default class ContainerFilmsPresenter {
 
   #renderMovie = (movie) => {
 
-    if (this.#sectionMovie.length === 0) {
-      render(this.#noMovieText, this.#placeContainer);
-    } else {
-      const moviePresenter = new MoviePresenter(this.#containerListFilm.element, this.#placePopupContainer);
-      // for (let i = 0; i <= this.#sectionMovie.length - 1; i++) {
-      moviePresenter.init(movie);
-      // }
-    }
+    // if (this.#sectionMovie.length === 0) {
+    //   render(this.#noMovieText, this.#placeContainer);
+    // } else {
+    const moviePresenter = new MoviePresenter(this.#containerListFilm.element, this.#placePopupContainer);
+    // for (let i = 0; i <= this.#sectionMovie.length - 1; i++) {
+    moviePresenter.init(movie);
+    // }
+    // }
 
     // for (let i = 0; i < Math.min(this.#sectionMovie.length, SHOW_FILM_COUNT_STEP); i++) {
     //   this.#createMovie(this.#sectionMovie[i]);
