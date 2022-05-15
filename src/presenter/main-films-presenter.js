@@ -5,6 +5,7 @@ import LoadMoreButtonView from '../view/load-more-button-view.js';
 import NoMovieView from '../view/no-movie-view.js';
 import NewFilterView from '../view/filter-view.js';
 import MoviePresenter from './movie-presenter.js';
+import { updateItem } from '../util.js';
 
 const SHOW_FILM_COUNT_STEP = 5;
 
@@ -81,6 +82,11 @@ export default class ContainerFilmsPresenter {
     this.#moviePresenter.clear();
     this.#renderedMovie = SHOW_FILM_COUNT_STEP;
     remove(this.#loadMoreButton);
+  };
+
+  #handleMovieChange = (updatedMovie) => {
+    this.#sectionMovie = updateItem(this.#sectionMovie, updatedMovie);
+    this.#moviePresenter.get(updatedMovie.idPresenter).init(updatedMovie);
   };
 }
 
