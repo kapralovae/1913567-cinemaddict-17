@@ -59,7 +59,7 @@ export default class ContainerFilmsPresenter {
   };
 
   #renderMovie = (movie) => {
-    const moviePresenter = new MoviePresenter(this.#containerListFilm.element, this.#placePopupContainer);
+    const moviePresenter = new MoviePresenter(this.#containerListFilm.element, this.#placePopupContainer, this.#handleMovieChange);
     moviePresenter.init(movie);
     this.#moviePresenter.set(movie.idPresenter, moviePresenter);
   };
@@ -86,7 +86,7 @@ export default class ContainerFilmsPresenter {
 
   #handleMovieChange = (updatedMovie) => {
     this.#sectionMovie = updateItem(this.#sectionMovie, updatedMovie);
-    this.#moviePresenter.get(updatedMovie.idPresenter).init(updatedMovie);
+    this.#moviePresenter.get(updatedMovie.idPresenter).init(updatedMovie, true);
   };
 }
 

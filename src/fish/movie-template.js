@@ -122,11 +122,11 @@ export const genetateCardMovie = () => {
       'genre': genreFilm.slice().splice(getRandomInt(0, genreFilm.length - 1), 1),
       'description': description[getRandomInt(0, 4)],
     },
-    'user_details': {
+    'userDetails': {
       'watchlist': false,
-      'already_watched': true,
-      'watching_date': '2019-04-12T16:12:32.554Z',
-      'favorite': false
+      'alreadyWatched': true,
+      'watchingDate': '2019-04-12T16:12:32.554Z',
+      'favorite': false,
     }
   };
 };
