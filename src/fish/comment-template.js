@@ -26,8 +26,8 @@ const datesComment = [
   '2020-05-11T16:12:32.554Z'
 ];
 
-export const generateComment = () => ({
-  'id': getRandomInt(1, 5),
+export const generateComment = (id) => ({
+  'id': id,
   'author': authors[getRandomInt(0, authors.length - 1)],
   'comment': textComments[getRandomInt(0, textComments.length - 1)],
   'date': datesComment[getRandomInt(0, datesComment.length - 1)],

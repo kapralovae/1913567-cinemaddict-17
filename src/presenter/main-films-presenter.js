@@ -21,7 +21,7 @@ export default class ContainerFilmsPresenter {
   #movieModel = null;
   #sectionMovie = [];
   #renderedMovie = SHOW_FILM_COUNT_STEP;
-  #moviePresenter = new Map();
+  #moviePresenters = new Map();
 
   constructor(placeContainer, placePopupContainer, movieModel) {
     this.#placeContainer = placeContainer;
@@ -59,9 +59,9 @@ export default class ContainerFilmsPresenter {
   };
 
   #renderMovie = (movie) => {
-    const moviePresenter = new MoviePresenter(this.#containerListFilm.element, this.#placePopupContainer, this.#handleMovieChange);
+    const moviePresenter = new MoviePresenter(this.#containerListFilm.element, this.#placePopupContainer, this.#handleMovieChange, this.#handleModalOpenned);
     moviePresenter.init(movie);
-    this.#moviePresenter.set(movie.idPresenter, moviePresenter);
+    this.#moviePresenters.set(movie.id, moviePresenter);
   };
 
   #onLoadMoreButtonClick = () => {
@@ -77,16 +77,21 @@ export default class ContainerFilmsPresenter {
     }
   };
 
+  #handleModalOpenned = () => {
+    this.#moviePresenters.forEach((presenter) => presenter.resetModal());
+  };
+
+
   #clearMovieList = () => {
-    this.#moviePresenter.forEach((presenter) => presenter.destroy());
-    this.#moviePresenter.clear();
+    this.#moviePresenters.forEach((presenter) => presenter.destroy());
+    this.#moviePresenters.clear();
     this.#renderedMovie = SHOW_FILM_COUNT_STEP;
     remove(this.#loadMoreButton);
   };
 
   #handleMovieChange = (updatedMovie) => {
     this.#sectionMovie = updateItem(this.#sectionMovie, updatedMovie);
-    this.#moviePresenter.get(updatedMovie.idPresenter).init(updatedMovie, true);
+    this.#moviePresenters.get(updatedMovie.id).init(updatedMovie, true);
   };
 }
 

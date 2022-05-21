@@ -10,15 +10,17 @@ export default class MoviePresenter {
   #changeData = null;
   #movie = null;
   #modalOpened = false;
+  #modalOpennedCallback = null;
 
 
-  constructor(containerListFilm, placePopupContainer, changeData) {
+  constructor(containerListFilm, placePopupContainer, changeData, modalOpennedCallback) {
     this.#containerListFilm = containerListFilm;
     this.#placePopupContainer = placePopupContainer;
     this.#changeData = changeData;
+    this.#modalOpennedCallback = modalOpennedCallback;
   }
 
-  init = (movie, reinit) => {
+  init = (movie, reinit = false) => {
     this.#movie = movie;
     const prevMovieComponent = this.#movieComponent;
     const prevPopupComponent = this.#popupComponent;
@@ -26,13 +28,14 @@ export default class MoviePresenter {
     this.#popupComponent = new NewPopupFilmView(movie);
 
     this.#movieComponent.setClickHandler(()=>{
-      render(this.#popupComponent, this.#placePopupContainer);
+      this.#modalOpennedCallback();
       this.#modalOpened = true;
-      this.setHandlersButtonOpenModal();
+      render(this.#popupComponent, this.#placePopupContainer);
+      this.setOpenModalHandlers();
     });
 
     if (this.#modalOpened === true && reinit === true) {
-      this.setHandlersButtonOpenModal();
+      this.setOpenModalHandlers();
     }
 
     this.#movieComponent.setWatchlistClickHandler(this.#handlerWatchlistClick);
@@ -56,11 +59,16 @@ export default class MoviePresenter {
     remove(prevPopupComponent);
   };
 
-  setHandlersButtonOpenModal = () => {
+  setOpenModalHandlers = () => {
     this.#popupComponent.setWatchlistClickHandler(this.#handlerWatchlistClick);
     this.#popupComponent.setAllredyWatchedClickHandler(this.#handlerAllredyWatchedClick);
     this.#popupComponent.setFavoritesClickHandler(this.#handlerFavoritesClick);
     this.#popupComponent.setClickCloseHandler(this.#onCloseButtonPopupClick);
+  };
+
+  resetModal = () => {
+    remove(this.#popupComponent);
+    this.#modalOpened = false;
   };
 
   destroy = () => {

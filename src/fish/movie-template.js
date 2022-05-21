@@ -96,11 +96,10 @@ const getRuntime = (offer) => {
 
 const commentsList = new CommentsModel();
 
+
 export const genetateCardMovie = () => {
-  const id = getRandomInt(1, 5);
-  const idPresenter = nanoid();
-  return{
-    'idPresenter': idPresenter,
+  const id = nanoid();
+  return {
     'id': id,
     'comments': [
       ...commentsList.getCommentsById(id)
