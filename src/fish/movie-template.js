@@ -1,6 +1,7 @@
 import { getRandomInt } from '../util.js';
 import CommentsModel from '../model/comments-model.js';
 import { humanizeDate } from '../util.js';
+import { nanoid } from 'nanoid';
 
 const postersArray = ['made-for-each-other.png',
   'popeye-meets-sinbad.png',
@@ -95,10 +96,10 @@ const getRuntime = (offer) => {
 
 const commentsList = new CommentsModel();
 
-export const genetateCardMovie = () => {
-  const id = getRandomInt(1, 5);
-  return{
 
+export const genetateCardMovie = () => {
+  const id = nanoid();
+  return {
     'id': id,
     'comments': [
       ...commentsList.getCommentsById(id)
@@ -120,11 +121,11 @@ export const genetateCardMovie = () => {
       'genre': genreFilm.slice().splice(getRandomInt(0, genreFilm.length - 1), 1),
       'description': description[getRandomInt(0, 4)],
     },
-    'user_details': {
+    'userDetails': {
       'watchlist': false,
-      'already_watched': true,
-      'watching_date': '2019-04-12T16:12:32.554Z',
-      'favorite': false
+      'alreadyWatched': true,
+      'watchingDate': '2019-04-12T16:12:32.554Z',
+      'favorite': false,
     }
   };
 };

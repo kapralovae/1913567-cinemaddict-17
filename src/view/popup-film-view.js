@@ -5,6 +5,19 @@ const createPopupFilm = (movie) => {
 
   const {filmInfo, comments} = movie;
 
+  let classActiveWatchlist = '';
+  let classActiveWatched = '';
+  let classActiveFavorite = '';
+  if (movie.userDetails.watchlist) {
+    classActiveWatchlist = 'film-details__control-button--active';
+  }
+  if (movie.userDetails.alreadyWatched) {
+    classActiveWatched = 'film-details__control-button--active';
+  }
+  if (movie.userDetails.favorite) {
+    classActiveFavorite = 'film-details__control-button--active';
+  }
+
   return(`
   <section class="film-details">
     <form class="film-details__inner" action="" method="get">
@@ -72,9 +85,9 @@ const createPopupFilm = (movie) => {
         </div>
 
         <section class="film-details__controls">
-          <button type="button" class="film-details__control-button film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
-          <button type="button" class="film-details__control-button film-details__control-button--active film-details__control-button--watched" id="watched" name="watched">Already watched</button>
-          <button type="button" class="film-details__control-button film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
+          <button type="button" class="film-details__control-button film-details__control-button--watchlist ${classActiveWatchlist}" id="watchlist" name="watchlist">Add to watchlist</button>
+          <button type="button" class="film-details__control-button film-details__control-button--watched ${classActiveWatched}" id="watched" name="watched">Already watched</button>
+          <button type="button" class="film-details__control-button film-details__control-button--favorite ${classActiveFavorite}" id="favorite" name="favorite">Add to favorites</button>
         </section>
       </div>
 
@@ -155,5 +168,35 @@ export default class NewPopupFilmView extends AbstractView {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       this.#clickHandler(evt);
     }
+  };
+
+  setWatchlistClickHandler = (callback) => {
+    this._callback.watchlistClick = callback;
+    this.element.querySelector('#watchlist').addEventListener('click', this.#watchlistClickHandler);
+  };
+
+  #watchlistClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.watchlistClick();
+  };
+
+  setAllredyWatchedClickHandler = (callback) => {
+    this._callback.alreadyWatchedClick = callback;
+    this.element.querySelector('#watched').addEventListener('click', this.#allredyWatchedClickHandler);
+  };
+
+  #allredyWatchedClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.alreadyWatchedClick();
+  };
+
+  setFavoritesClickHandler = (callback) => {
+    this._callback.favoritesClick = callback;
+    this.element.querySelector('#favorite').addEventListener('click', this.#favoritesClickHandler);
+  };
+
+  #favoritesClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.favoritesClick();
   };
 }
