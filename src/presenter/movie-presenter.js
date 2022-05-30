@@ -32,6 +32,9 @@ export default class MoviePresenter {
       this.#modalOpened = true;
       render(this.#popupComponent, this.#placePopupContainer);
       this.setOpenModalHandlers();
+      // const position = this.#popupComponent.position();
+      // this.#popupComponent.scrollPosition(position);
+      // console.log(position);
     });
 
     if (this.#modalOpened === true && reinit === true) {
@@ -53,6 +56,9 @@ export default class MoviePresenter {
 
     if (this.#placePopupContainer.contains(prevPopupComponent.element)) {
       replace(this.#popupComponent, prevPopupComponent);
+      this.#popupComponent.element.scroll({
+        top : this.popupScrollPosition,
+      });
     }
 
     remove(prevMovieComponent);
@@ -83,14 +89,17 @@ export default class MoviePresenter {
   };
 
   #handlerWatchlistClick = () => {
+    this.popupScrollPosition = this.#popupComponent.element.scrollTop;
     this.#changeData({...this.#movie, userDetails: {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist}});
   };
 
   #handlerAllredyWatchedClick = () => {
+    this.popupScrollPosition = this.#popupComponent.element.scrollTop;
     this.#changeData({...this.#movie, userDetails: {...this.#movie.userDetails, alreadyWatched: !this.#movie.userDetails.alreadyWatched}});
   };
 
   #handlerFavoritesClick = () => {
+    this.popupScrollPosition = this.#popupComponent.element.scrollTop;
     this.#changeData({...this.#movie, userDetails: {...this.#movie.userDetails, favorite: !this.#movie.userDetails.favorite}});
   };
 }
