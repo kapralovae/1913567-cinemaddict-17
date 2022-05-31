@@ -13,4 +13,3 @@ render(new NewRankUserView(), headerLogo);
 render(new NewNavigationView(), main);
 
 containerFilmsPresenter.init();
-

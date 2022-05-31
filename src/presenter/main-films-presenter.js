@@ -5,7 +5,8 @@ import LoadMoreButtonView from '../view/load-more-button-view.js';
 import NoMovieView from '../view/no-movie-view.js';
 import NewFilterView from '../view/filter-view.js';
 import MoviePresenter from './movie-presenter.js';
-import { updateItem } from '../util.js';
+import {UserAction, UpdateType} from '../const.js';
+
 
 const SHOW_FILM_COUNT_STEP = 5;
 
@@ -19,7 +20,6 @@ export default class ContainerFilmsPresenter {
   #placeContainer = null;
   #placePopupContainer = null;
   #movieModel = null;
-  #sectionMovie = [];
   #renderedMovie = SHOW_FILM_COUNT_STEP;
   #moviePresenters = new Map();
 
@@ -27,25 +27,59 @@ export default class ContainerFilmsPresenter {
     this.#placeContainer = placeContainer;
     this.#placePopupContainer = placePopupContainer;
     this.#movieModel = movieModel;
+
+    this.#movieModel.addObserver(this.#handleModelEvent);
   }
 
+  get movies() {
+    return this.#movieModel.movie;
+  }
+
+  #handlerViewAction = (actionType, updateType, update) => {
+    switch (actionType) {
+      case UserAction.UPDATE_MOVIE:
+        this.#movieModel.updateMovie(updateType, update);
+        break;
+      case UserAction.ADD_MOVIE:
+        this.#movieModel.addMovie(updateType, update);
+        break;
+      case UserAction.DELETE_MOVIE:
+        this.#movieModel.deleteMovie(updateType, update);
+        break;
+    }
+  };
+
+  #handleModelEvent = (updateType, updatedMovie) => {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this.#moviePresenters.get(updatedMovie.id).init(updatedMovie, true);
+        break;
+      case UpdateType.MINOR:
+        break;
+      case UpdateType.MAJOR:
+        break;
+    }
+  };
+
+
   init = () => {
+
     this.#renderFilter();
 
-    this.#sectionMovie = [...this.#movieModel.movie];
-    if (this.#sectionMovie.length === 0) {
+
+    if (this.movies.length === 0) {
       render(this.#noMovieText, this.#placeContainer);
     } else {
       this.#renderSectionFilm();
       render(this.#containerListFilm, this.#sectioinFilms.element);
 
-      for (let i = 0; i < Math.min(this.#sectionMovie.length, SHOW_FILM_COUNT_STEP); i++) {
-        this.#renderMovie(this.#sectionMovie[i]);
+      for (let i = 0; i < Math.min(this.movies.length, SHOW_FILM_COUNT_STEP); i++) {
+        this.#renderMovie(this.movies[i]);
       }
 
-      if (this.#sectionMovie.length > SHOW_FILM_COUNT_STEP) {
+      if (this.movies.length > SHOW_FILM_COUNT_STEP) {
         render(this.#loadMoreButton, this.#sectioinFilms.element);
-        this.#loadMoreButton.setClickHandler(this.#onLoadMoreButtonClick);
+        this.#loadMoreButton.setClickHandler(this.#handlerLoadMoreButtonClick);
       }
     }
   };
@@ -59,19 +93,19 @@ export default class ContainerFilmsPresenter {
   };
 
   #renderMovie = (movie) => {
-    const moviePresenter = new MoviePresenter(this.#containerListFilm.element, this.#placePopupContainer, this.#handleMovieChange, this.#handleModalOpenned);
+    const moviePresenter = new MoviePresenter(this.#containerListFilm.element, this.#placePopupContainer, this.#handlerViewAction, this.#handleModalOpenned);
     moviePresenter.init(movie);
     this.#moviePresenters.set(movie.id, moviePresenter);
   };
 
-  #onLoadMoreButtonClick = () => {
-    this.#sectionMovie
+  #handlerLoadMoreButtonClick = () => {
+    this.movies
       .slice(this.#renderedMovie, this.#renderedMovie + SHOW_FILM_COUNT_STEP)
       .forEach((element) => this.#renderMovie(element));
 
     this.#renderedMovie += SHOW_FILM_COUNT_STEP;
 
-    if (this.#renderedMovie >= this.#sectionMovie.length) {
+    if (this.#renderedMovie >= this.movies.length) {
       this.#loadMoreButton.element.remove();
       this.#loadMoreButton.removeElement();
     }
@@ -89,9 +123,9 @@ export default class ContainerFilmsPresenter {
     remove(this.#loadMoreButton);
   };
 
-  #handleMovieChange = (updatedMovie) => {
-    this.#sectionMovie = updateItem(this.#sectionMovie, updatedMovie);
-    this.#moviePresenters.get(updatedMovie.id).init(updatedMovie, true);
-  };
+  // #handleMovieChange = (updatedMovie) => {
+  //   this.movies = updateItem(this.movies, updatedMovie);
+  //   this.#moviePresenters.get(updatedMovie.id).init(updatedMovie, true);
+  // };
 }
 

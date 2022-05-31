@@ -1,3 +1,4 @@
+import { UpdateType, UserAction } from '../const.js';
 import { remove, render, replace } from '../framework/render.js';
 import NewCardFilmView from '../view/card-film-view.js';
 import NewPopupFilmView from '../view/popup-film-view.js';
@@ -32,9 +33,6 @@ export default class MoviePresenter {
       this.#modalOpened = true;
       render(this.#popupComponent, this.#placePopupContainer);
       this.setOpenModalHandlers();
-      // const position = this.#popupComponent.position();
-      // this.#popupComponent.scrollPosition(position);
-      // console.log(position);
     });
 
     if (this.#modalOpened === true && reinit === true) {
@@ -89,17 +87,32 @@ export default class MoviePresenter {
   };
 
   #handlerWatchlistClick = () => {
-    this.popupScrollPosition = this.#popupComponent.element.scrollTop;
-    this.#changeData({...this.#movie, userDetails: {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist}});
+    // this.popupScrollPosition = this.#popupComponent.element.scrollTop;
+    // this.#changeData({...this.#movie, userDetails: {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist}});
+    this.#changeData(
+      UserAction.UPDATE_MOVIE,
+      UpdateType.MINOR,
+      {...this.#movie, userDetails: {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist}},
+    );
   };
 
   #handlerAllredyWatchedClick = () => {
-    this.popupScrollPosition = this.#popupComponent.element.scrollTop;
-    this.#changeData({...this.#movie, userDetails: {...this.#movie.userDetails, alreadyWatched: !this.#movie.userDetails.alreadyWatched}});
+    // this.popupScrollPosition = this.#popupComponent.element.scrollTop;
+    // this.#changeData({...this.#movie, userDetails: {...this.#movie.userDetails, alreadyWatched: !this.#movie.userDetails.alreadyWatched}});
+    this.#changeData(
+      UserAction.UPDATE_MOVIE,
+      UpdateType.MINOR,
+      {...this.#movie, userDetails: {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.alreadyWatched}},
+    );
   };
 
   #handlerFavoritesClick = () => {
-    this.popupScrollPosition = this.#popupComponent.element.scrollTop;
-    this.#changeData({...this.#movie, userDetails: {...this.#movie.userDetails, favorite: !this.#movie.userDetails.favorite}});
+    // this.popupScrollPosition = this.#popupComponent.element.scrollTop;
+    // this.#changeData({...this.#movie, userDetails: {...this.#movie.userDetails, favorite: !this.#movie.userDetails.favorite}});
+    this.#changeData(
+      UserAction.UPDATE_MOVIE,
+      UpdateType.MINOR,
+      {...this.#movie, userDetails: {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.favorite}},
+    );
   };
 }
