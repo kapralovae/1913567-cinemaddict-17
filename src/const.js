@@ -1,3 +1,9 @@
+const FilterType = {
+  DEFAULT: 'defaul',
+  DATE: 'date',
+  RATING: 'rating',
+};
+
 const UserAction = {
   UPDATE_MOVIE: 'UPDATE_MOVIE',
   ADD_MOVIE: 'ADD_MOVIE',
@@ -10,4 +16,4 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
-export {UserAction, UpdateType};
+export {FilterType, UserAction, UpdateType};
