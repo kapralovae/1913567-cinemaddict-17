@@ -155,16 +155,5 @@ export default class ContainerFilmsPresenter {
   };
 
 
-  #clearMovieList = () => {
-    this.#moviePresenters.forEach((presenter) => presenter.destroy());
-    this.#moviePresenters.clear();
-    this.#renderedMovie = SHOW_FILM_COUNT_STEP;
-    remove(this.#loadMoreButton);
-  };
-
-  // #handleMovieChange = (updatedMovie) => {
-  //   this.movies = updateItem(this.movies, updatedMovie);
-  //   this.#moviePresenters.get(updatedMovie.id).init(updatedMovie, true);
-  // };
 }
 

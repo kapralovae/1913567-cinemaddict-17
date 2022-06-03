@@ -28,7 +28,7 @@ export default class MoviePresenter {
     this.#movieComponent = new NewCardFilmView(movie);
     this.#popupComponent = new NewPopupFilmView(movie);
 
-    this.#movieComponent.setClickHandler(()=>{
+    this.#movieComponent.setClickHandler(() => {
       this.#modalOpennedCallback();
       this.#modalOpened = true;
       render(this.#popupComponent, this.#placePopupContainer);
@@ -87,8 +87,6 @@ export default class MoviePresenter {
   };
 
   #handlerWatchlistClick = () => {
-    // this.popupScrollPosition = this.#popupComponent.element.scrollTop;
-    // this.#changeData({...this.#movie, userDetails: {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist}});
     this.#changeData(
       UserAction.UPDATE_MOVIE,
       UpdateType.MINOR,
@@ -97,8 +95,6 @@ export default class MoviePresenter {
   };
 
   #handlerAllredyWatchedClick = () => {
-    // this.popupScrollPosition = this.#popupComponent.element.scrollTop;
-    // this.#changeData({...this.#movie, userDetails: {...this.#movie.userDetails, alreadyWatched: !this.#movie.userDetails.alreadyWatched}});
     this.#changeData(
       UserAction.UPDATE_MOVIE,
       UpdateType.MINOR,
@@ -107,12 +103,15 @@ export default class MoviePresenter {
   };
 
   #handlerFavoritesClick = () => {
-    // this.popupScrollPosition = this.#popupComponent.element.scrollTop;
-    // this.#changeData({...this.#movie, userDetails: {...this.#movie.userDetails, favorite: !this.#movie.userDetails.favorite}});
     this.#changeData(
       UserAction.UPDATE_MOVIE,
       UpdateType.MINOR,
       {...this.#movie, userDetails: {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.favorite}},
     );
   };
+
+  // #handlerDeleteCommentClick = () => {
+
+  // };
+
 }
