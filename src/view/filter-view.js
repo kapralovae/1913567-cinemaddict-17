@@ -18,4 +18,6 @@ export default class NewFilterView extends AbstractView{
   get template() {
     return createFilter(this.#currentFilter);
   }
+
+
 }

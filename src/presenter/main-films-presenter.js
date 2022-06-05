@@ -43,8 +43,6 @@ export default class ContainerFilmsPresenter {
       case UserAction.UPDATE_MOVIE:
         this.#movieModel.updateMovie(updateType, update);
         break;
-      case UserAction.ADD_COMMENT:
-        break;
       case UserAction.DELETE_COMMENT:
         this.#commentsModal.deleteComment(updateType, update);
         break;
@@ -56,31 +54,23 @@ export default class ContainerFilmsPresenter {
       case UpdateType.PATCH:
         this.#moviePresenters.get(updatedMovie.id).init(updatedMovie, true);
         break;
-      case UpdateType.MINOR:
-        break;
-      case UpdateType.MAJOR:
-        break;
     }
   };
 
   #handleModelCommentsEvent = (updateType, updatedComments) => {
-    /*
-      1) Надо найти фильм имея ид комента. ид ком = ид фильма
-      4) Для каждого комментария порядковый номер по индексу в массиве
-      5) дата атрибут посмотреть в попап вью.
-      6) Соединить фильм и комменты и передать в инит и перерисовать с новыми коментами.
-    */
+
+    const movie = this.#movieModel.movie.find((currentMovie) => currentMovie.id === updatedComments.id);
+    const movieWithComments = this.#createPaireMovieComment(movie);
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#moviePresenters.get(updatedMovie.id).init(updatedMovie, true);
         break;
       case UpdateType.MINOR:
+        this.#moviePresenters.get(updatedComments.id).init(movieWithComments, true);
         break;
       case UpdateType.MAJOR:
         break;
     }
   };
-
 
   init = () => {
     this.#renderBoardFilms();

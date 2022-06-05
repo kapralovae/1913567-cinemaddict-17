@@ -63,6 +63,7 @@ export default class MoviePresenter {
     remove(prevPopupComponent);
   };
 
+
   setOpenModalHandlers = () => {
     this.#popupComponent.setWatchlistClickHandler(this.#handlerWatchlistClick);
     this.#popupComponent.setAllredyWatchedClickHandler(this.#handlerAllredyWatchedClick);
@@ -124,8 +125,6 @@ export default class MoviePresenter {
   };
 
   #handlerDeleteMessageClick = (idUniq) => {
-    console.log(evt.target);
-
     this.#changeData(
       UserAction.DELETE_COMMENT,
       UpdateType.MINOR,

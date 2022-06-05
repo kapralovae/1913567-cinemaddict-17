@@ -22,15 +22,6 @@ export default class MovieModel extends Observable {
     this._notify(updateType, update);
   };
 
-  addMovie = (updateType, update) => {
-    this.#movies = [
-      update,
-      ...this.#movies,
-    ];
-
-    this._notify(updateType, update);
-  };
-
   deleteMovie = (updateType, update) => {
     const index = this.#movies.findIndex((movie) => movie.id === update.id);
 
