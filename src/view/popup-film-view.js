@@ -162,7 +162,7 @@ export default class NewPopupFilmView extends AbstractStatefulView {
   setClickDeleteMessageHandler = (callback) => {
     this._callback.delete = callback;
     this.element.querySelector('.film-details__comment-delete').addEventListener('click', this.#handlerDeleteComment);
-    console.log('132', this.element.querySelector('.film-details__comment-delete'));
+    console.log('132',callback);
   };
 
   _restoreHandlers = () => {
@@ -250,6 +250,7 @@ export default class NewPopupFilmView extends AbstractStatefulView {
 
   #handlerDeleteComment = (evt) => {
     evt.preventDefault();
+    console.log(evt.target);
     this._callback.delete();
   };
 }

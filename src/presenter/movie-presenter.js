@@ -123,19 +123,15 @@ export default class MoviePresenter {
     );
   };
 
-  #handlerDeleteMessageClick = (idUniverse) => {
-    console.log('123');
+  #handlerDeleteMessageClick = (idUniq) => {
+    console.log(evt.target);
 
     this.#changeData(
       UserAction.DELETE_COMMENT,
       UpdateType.MINOR,
-      {id : this.movie.id,
-        idUniverse},
+      {id : this.#movie.id,
+        idUniq},
     );
   };
-
-  // #handlerDeleteCommentClick = () => {
-
-  // };
 
 }

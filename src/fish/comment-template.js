@@ -29,7 +29,7 @@ const datesComment = [
 
 export const generateComment = (id) => ({
   'id': id,
-  'idUniverse' : nanoid(),
+  'idUniq' : nanoid(),
   'author': authors[getRandomInt(0, authors.length - 1)],
   'comment': textComments[getRandomInt(0, textComments.length - 1)],
   'date': datesComment[getRandomInt(0, datesComment.length - 1)],

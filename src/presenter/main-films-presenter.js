@@ -46,7 +46,6 @@ export default class ContainerFilmsPresenter {
       case UserAction.ADD_COMMENT:
         break;
       case UserAction.DELETE_COMMENT:
-        console.log(update.id);
         this.#commentsModal.deleteComment(updateType, update);
         break;
     }

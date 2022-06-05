@@ -57,7 +57,7 @@ export default class CommentsModel extends Observable{
       throw new Error('Can\'t delete unexisting movie');
     }
 //Найти комментарий по update.id
-// В комментариях найти нужный комментарий по update.idUniverse
+// В комментариях найти нужный комментарий по update.idUniq
 // удалить комментарий.
     this.#comments = [
       ...this.#comments.slice(0, index),

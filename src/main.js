@@ -10,7 +10,6 @@ const main = document.querySelector('main');
 const movieModel = new MovieModel();
 const commentsModal = new CommentsModel(movieModel);
 const containerFilmsPresenter = new ContainerFilmsPresenter(main, document.body, movieModel,commentsModal);
-console.log(commentsModal.comment);
 render(new NewRankUserView(), headerLogo);
 render(new NewNavigationView(), main);
 
