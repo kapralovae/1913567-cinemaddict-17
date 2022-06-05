@@ -1,5 +1,5 @@
 import { getRandomInt } from '../util.js';
-import CommentsModel from '../model/comments-model.js';
+import {commentsModal} from '../main.js';
 import { humanizeDate } from '../util.js';
 import { nanoid } from 'nanoid';
 
@@ -94,15 +94,13 @@ const getRuntime = (offer) => {
   return runtime[getRandomInt(0, runtime.length - 1)];
 };
 
-const commentsList = new CommentsModel();
-
 
 export const genetateCardMovie = () => {
   const id = nanoid();
   return {
     'id': id,
     'comments': [
-      ...commentsList.getCommentsById(id)
+      // ...commentsModal.getCommentsById(id)
     ],
     'filmInfo': {
       'title': titleFilm[getRandomInt(0, 4)],

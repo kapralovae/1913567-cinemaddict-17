@@ -96,8 +96,8 @@ const createPopupFilm = (movie) => {
           <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
           <ul class="film-details__comments-list">
-            ${comments.reduce((template, comment) => {
-      template += new NewCommentView(comment).template;
+            ${comments.reduce((template, comment, index) => {
+      template += new NewCommentView(comment, index).template;
       return template;
     }, '')}
           </ul>
@@ -159,11 +159,17 @@ export default class NewPopupFilmView extends AbstractStatefulView {
     this.#setInnerHandlers();
   };
 
+  setClickDeleteMessageHandler = (callback) => {
+    this._callback.delete = callback;
+    this.element.querySelector('.film-details__comment-delete').addEventListener('click', this.#handlerDeleteComment);
+    console.log('132', this.element.querySelector('.film-details__comment-delete'));
+  };
+
   _restoreHandlers = () => {
-    this.#setInnerHandlers();
     this.element.scroll({
       top : this.popupScrollPosition,
     });
+    this.#setInnerHandlers();
     this.setWatchlistClickHandler(this._callback.watchlistClick);
     this.setAllredyWatchedClickHandler(this._callback.alreadyWatchedClick);
     this.setFavoritesClickHandler(this._callback.favoritesClick);
@@ -201,6 +207,7 @@ export default class NewPopupFilmView extends AbstractStatefulView {
   #allredyWatchedClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.alreadyWatchedClick();
+    this.popupScrollPosition = this.element.scrollTop;
   };
 
   setFavoritesClickHandler = (callback) => {
@@ -211,7 +218,6 @@ export default class NewPopupFilmView extends AbstractStatefulView {
   #favoritesClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.favoritesClick();
-    this.popupScrollPosition = this.element.scrollTop;
   };
 
   static parseMovieToState = (movie) => ({...movie,
@@ -240,5 +246,10 @@ export default class NewPopupFilmView extends AbstractStatefulView {
     this._setState({
       commentEmoji: evt.target.value,
     });
+  };
+
+  #handlerDeleteComment = (evt) => {
+    evt.preventDefault();
+    this._callback.delete();
   };
 }

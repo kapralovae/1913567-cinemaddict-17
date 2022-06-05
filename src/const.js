@@ -1,13 +1,13 @@
 const FilterType = {
-  DEFAULT: 'defaul',
+  DEFAULT: 'default',
   DATE: 'date',
   RATING: 'rating',
 };
 
 const UserAction = {
   UPDATE_MOVIE: 'UPDATE_MOVIE',
-  ADD_MOVIE: 'ADD_MOVIE',
-  DELETE_MOVIE: 'DELETE_MOVIE',
+  ADD_COMMENT: 'ADD_COMMENT',
+  DELETE_COMMENT: 'DELETE_COMMENT',
 };
 
 const UpdateType = {

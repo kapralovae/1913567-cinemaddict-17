@@ -2,7 +2,7 @@ import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeDate } from '../util.js';
 
 const createComment = (comments) => {
-  const {comment, date, emotion, author} = comments;
+  const {comment, date, emotion, author, idUniverse} = comments;
 
   return (`
   <li class="film-details__comment">
@@ -15,7 +15,7 @@ const createComment = (comments) => {
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${author}</span>
         <span class="film-details__comment-day">${humanizeDate(date)}</span>
-        <button class="film-details__comment-delete">Delete</button>
+        <button data-comment-index=${idUniverse} class="film-details__comment-delete">Delete</button>
       </p>
     </div>
   </li>
@@ -26,10 +26,12 @@ const createComment = (comments) => {
 export default class NewCommentView extends AbstractView {
 
   #comment = null;
+  #index = null;
 
-  constructor(comment) {
+  constructor(comment, index) {
     super();
     this.#comment = comment;
+    this.#index = index;
   }
 
   get template() {
@@ -43,6 +45,7 @@ export default class NewCommentView extends AbstractView {
 
   #handlerDeleteButton = (evt) => {
     evt.preventDefault();
+    //достать уникальный ид коментария и передать в делеткоммент 49строка
     this._callback.deleteComment();
   };
 }

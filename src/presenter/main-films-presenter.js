@@ -7,7 +7,6 @@ import NewFilterView from '../view/filter-view.js';
 import MoviePresenter from './movie-presenter.js';
 import {UserAction, UpdateType, FilterType} from '../const.js';
 
-
 const SHOW_FILM_COUNT_STEP = 5;
 
 export default class ContainerFilmsPresenter {
@@ -23,13 +22,16 @@ export default class ContainerFilmsPresenter {
   #movieModel = null;
   #renderedMovie = SHOW_FILM_COUNT_STEP;
   #moviePresenters = new Map();
+  #commentsModal = null;
 
-  constructor(placeContainer, placePopupContainer, movieModel) {
+  constructor(placeContainer, placePopupContainer, movieModel, commentsModal) {
     this.#placeContainer = placeContainer;
     this.#placePopupContainer = placePopupContainer;
     this.#movieModel = movieModel;
+    this.#commentsModal = commentsModal;
 
     this.#movieModel.addObserver(this.#handleModelEvent);
+    this.#commentsModal.addObserver(this.#handleModelCommentsEvent);
   }
 
   get movies() {
@@ -41,16 +43,34 @@ export default class ContainerFilmsPresenter {
       case UserAction.UPDATE_MOVIE:
         this.#movieModel.updateMovie(updateType, update);
         break;
-      case UserAction.ADD_MOVIE:
-        this.#movieModel.addMovie(updateType, update);
+      case UserAction.ADD_COMMENT:
         break;
-      case UserAction.DELETE_MOVIE:
-        this.#movieModel.deleteMovie(updateType, update);
+      case UserAction.DELETE_COMMENT:
+        console.log(update.id);
+        this.#commentsModal.deleteComment(updateType, update);
         break;
     }
   };
 
   #handleModelEvent = (updateType, updatedMovie) => {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this.#moviePresenters.get(updatedMovie.id).init(updatedMovie, true);
+        break;
+      case UpdateType.MINOR:
+        break;
+      case UpdateType.MAJOR:
+        break;
+    }
+  };
+
+  #handleModelCommentsEvent = (updateType, updatedComments) => {
+    /*
+      1) Надо найти фильм имея ид комента. ид ком = ид фильма
+      4) Для каждого комментария порядковый номер по индексу в массиве
+      5) дата атрибут посмотреть в попап вью.
+      6) Соединить фильм и комменты и передать в инит и перерисовать с новыми коментами.
+    */
     switch (updateType) {
       case UpdateType.PATCH:
         this.#moviePresenters.get(updatedMovie.id).init(updatedMovie, true);
@@ -86,8 +106,13 @@ export default class ContainerFilmsPresenter {
     movies.forEach((movie) => this.#renderMovie(movie));
   };
 
+  #createPaireMovieComment = (movie) => {
+    const commentsForFilm = this.#commentsModal.getCommentsById(movie.id);
+    return {...movie, comments: commentsForFilm};
+  };
+
   #renderBoardFilms = () => {
-    const movies = this.movies;
+    const movies = this.movies.map((movie) => this.#createPaireMovieComment(movie));
     const movieCount = movies.length;
 
     this.#renderFilter();
@@ -133,6 +158,7 @@ export default class ContainerFilmsPresenter {
 
   #renderLoadMoreButton = () => {
     this.#loadMoreButton = new LoadMoreButtonView();
+    render(this.#loadMoreButton, this.#sectioinFilms.element);
     this.#loadMoreButton.setClickHandler(this.#handlerLoadMoreButtonClick);
   };
 

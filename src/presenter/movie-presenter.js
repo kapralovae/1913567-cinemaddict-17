@@ -68,6 +68,7 @@ export default class MoviePresenter {
     this.#popupComponent.setAllredyWatchedClickHandler(this.#handlerAllredyWatchedClick);
     this.#popupComponent.setFavoritesClickHandler(this.#handlerFavoritesClick);
     this.#popupComponent.setClickCloseHandler(this.#onCloseButtonPopupClick);
+    this.#popupComponent.setClickDeleteMessageHandler(this.#handlerDeleteMessageClick);
   };
 
   resetModal = () => {
@@ -87,26 +88,49 @@ export default class MoviePresenter {
   };
 
   #handlerWatchlistClick = () => {
+    this.popupScrollPosition = this.#popupComponent.element.scrollTop;
+    this.#popupComponent.element.scroll({
+      top : this.popupScrollPosition,
+    });
     this.#changeData(
       UserAction.UPDATE_MOVIE,
-      UpdateType.MINOR,
+      UpdateType.PATCH,
       {...this.#movie, userDetails: {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist}},
     );
   };
 
   #handlerAllredyWatchedClick = () => {
+    this.popupScrollPosition = this.#popupComponent.element.scrollTop;
+    this.#popupComponent.element.scroll({
+      top : this.popupScrollPosition,
+    });
     this.#changeData(
       UserAction.UPDATE_MOVIE,
-      UpdateType.MINOR,
-      {...this.#movie, userDetails: {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.alreadyWatched}},
+      UpdateType.PATCH,
+      {...this.#movie, userDetails: {...this.#movie.userDetails, alreadyWatched: !this.#movie.userDetails.alreadyWatched}},
     );
   };
 
   #handlerFavoritesClick = () => {
+    this.popupScrollPosition = this.#popupComponent.element.scrollTop;
+    this.#popupComponent.element.scroll({
+      top : this.popupScrollPosition,
+    });
     this.#changeData(
       UserAction.UPDATE_MOVIE,
+      UpdateType.PATCH,
+      {...this.#movie, userDetails: {...this.#movie.userDetails, favorite: !this.#movie.userDetails.favorite}},
+    );
+  };
+
+  #handlerDeleteMessageClick = (idUniverse) => {
+    console.log('123');
+
+    this.#changeData(
+      UserAction.DELETE_COMMENT,
       UpdateType.MINOR,
-      {...this.#movie, userDetails: {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.favorite}},
+      {id : this.movie.id,
+        idUniverse},
     );
   };
 

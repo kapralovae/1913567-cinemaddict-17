@@ -30,7 +30,7 @@
     "style-loader": "3.3.1"
   },
   "engines": {
-    "node": "16"
+    "npme": "16"
   },
   "dependencies": {
     "dayjs": "1.11.1"
