@@ -1,4 +1,4 @@
-const FilterType = {
+const SortType = {
   DEFAULT: 'default',
   DATE: 'date',
   RATING: 'rating',
@@ -16,4 +16,4 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
-export {FilterType, UserAction, UpdateType};
+export {SortType, UserAction, UpdateType};

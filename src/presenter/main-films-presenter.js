@@ -3,9 +3,9 @@ import NewSectionFilmsView from '../view/film-section.js';
 import ContainerListFilmView from '../view/film-list-container-view.js';
 import LoadMoreButtonView from '../view/load-more-button-view.js';
 import NoMovieView from '../view/no-movie-view.js';
-import NewFilterView from '../view/filter-view.js';
+import NewSortView from '../view/filter-view.js';
 import MoviePresenter from './movie-presenter.js';
-import {UserAction, UpdateType, FilterType} from '../const.js';
+import {UserAction, UpdateType, SortType} from '../const.js';
 
 const SHOW_FILM_COUNT_STEP = 5;
 
@@ -16,7 +16,7 @@ export default class ContainerFilmsPresenter {
   #loadMoreButton = null;
   #noMovieText = new NoMovieView();
   #filter = null;
-  #currentFilter = FilterType.DEFAULT;
+  #currentSort = SortType.DEFAULT;
   #placeContainer = null;
   #placePopupContainer = null;
   #movieModel = null;
@@ -77,7 +77,7 @@ export default class ContainerFilmsPresenter {
   };
 
   #renderFilter = () => {
-    this.#filter = new NewFilterView(this.#currentFilter);
+    this.#filter = new NewSortView(this.#currentSort);
     render(this.#filter, this.#placeContainer);
   };
 
@@ -120,7 +120,7 @@ export default class ContainerFilmsPresenter {
     }
   };
 
-  #clearBoardFilms = ({resetRenderedMovieCount = false, resetFilterType = false} = {}) => {
+  #clearBoardFilms = ({resetRenderedMovieCount = false, resetSortType = false} = {}) => {
     const movieCount = this.movies.length;
 
     this.#moviePresenters.forEach((presenter) => presenter.destroy());
@@ -136,8 +136,8 @@ export default class ContainerFilmsPresenter {
       this.#renderedMovie = Math.min(movieCount, this.#renderedMovie);
     }
 
-    if (resetFilterType) {
-      this.#currentFilter = FilterType.DEFAULT;
+    if (resetSortType) {
+      this.#currentSort = SortType.DEFAULT;
     }
   };
 

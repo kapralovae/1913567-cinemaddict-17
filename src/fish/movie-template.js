@@ -1,5 +1,4 @@
 import { getRandomInt } from '../util.js';
-import {commentsModal} from '../main.js';
 import { humanizeDate } from '../util.js';
 import { nanoid } from 'nanoid';
 
