@@ -1,3 +1,17 @@
+const FilterType = {
+  ALL_MOVIES: 'All_movies',
+  WATCHLIST: 'Watchlist',
+  HISTORY: 'History',
+  FAVORITES: 'Favorites',
+};
+
+const FilterMapType = {
+  all: 'All_movies',
+  watchlist: 'Watchlist',
+  alreadyWatched: 'History',
+  favorite: 'Favorites',
+};
+
 const SortType = {
   DEFAULT: 'default',
   DATE: 'date',
@@ -8,6 +22,7 @@ const UserAction = {
   UPDATE_MOVIE: 'UPDATE_MOVIE',
   ADD_COMMENT: 'ADD_COMMENT',
   DELETE_COMMENT: 'DELETE_COMMENT',
+  FILTER_MOVIE : 'FILTER_MOVIE',
 };
 
 const UpdateType = {
@@ -16,4 +31,4 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
-export {SortType, UserAction, UpdateType};
+export {SortType, UserAction, UpdateType, FilterType, FilterMapType};

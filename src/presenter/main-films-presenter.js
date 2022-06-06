@@ -3,9 +3,10 @@ import NewSectionFilmsView from '../view/film-section.js';
 import ContainerListFilmView from '../view/film-list-container-view.js';
 import LoadMoreButtonView from '../view/load-more-button-view.js';
 import NoMovieView from '../view/no-movie-view.js';
-import NewSortView from '../view/filter-view.js';
+import NewSortView from '../view/sort-view.js';
 import MoviePresenter from './movie-presenter.js';
 import {UserAction, UpdateType, SortType} from '../const.js';
+import FiltersPresenter from './filters-presenter.js';
 
 const SHOW_FILM_COUNT_STEP = 5;
 
@@ -15,7 +16,7 @@ export default class ContainerFilmsPresenter {
   #containerListFilm = new ContainerListFilmView();
   #loadMoreButton = null;
   #noMovieText = new NoMovieView();
-  #filter = null;
+  #sort = null;
   #currentSort = SortType.DEFAULT;
   #placeContainer = null;
   #placePopupContainer = null;
@@ -23,15 +24,18 @@ export default class ContainerFilmsPresenter {
   #renderedMovie = SHOW_FILM_COUNT_STEP;
   #moviePresenters = new Map();
   #commentsModal = null;
+  #filtersModal = null;
 
-  constructor(placeContainer, placePopupContainer, movieModel, commentsModal) {
+  constructor(placeContainer, placePopupContainer, movieModel, commentsModal, filtersModal) {
     this.#placeContainer = placeContainer;
     this.#placePopupContainer = placePopupContainer;
     this.#movieModel = movieModel;
     this.#commentsModal = commentsModal;
+    this.#filtersModal = filtersModal;
 
     this.#movieModel.addObserver(this.#handleModelEvent);
     this.#commentsModal.addObserver(this.#handleModelCommentsEvent);
+    this.#filtersModal.addObserver(this.#handleModelFiltersEvent);
   }
 
   get movies() {
@@ -45,6 +49,9 @@ export default class ContainerFilmsPresenter {
         break;
       case UserAction.DELETE_COMMENT:
         this.#commentsModal.deleteComment(updateType, update);
+        break;
+      case UserAction.FILTER_MOVIE:
+        this.#filtersModal.changeFilter(updateType, update);
         break;
     }
   };
@@ -72,13 +79,30 @@ export default class ContainerFilmsPresenter {
     }
   };
 
+  #handleModelFiltersEvent = (updateType, updatedFilters) => {
+    switch (updateType) {
+      case UpdateType.MAJOR:
+        if (updatedFilters === 'all') {} //допилить
+        console.log(this.movies);
+        console.log('popal', updatedFilters);
+        this.#clearBoardFilms();
+        const qwerty = this.movies.filter((movie) => {
+          return movie.userDetails[updatedFilters];
+        });
+        console.log(qwerty);
+        this.init();
+        //this.init();// #handleModelFiltersEvent
+        break;
+    }
+  };
+
   init = () => {
     this.#renderBoardFilms();
   };
 
-  #renderFilter = () => {
-    this.#filter = new NewSortView(this.#currentSort);
-    render(this.#filter, this.#placeContainer);
+  #renderSort = () => {
+    this.#sort = new NewSortView(this.#currentSort);
+    render(this.#sort, this.#placeContainer);
   };
 
   #renderSectionFilm = () => {
@@ -104,7 +128,10 @@ export default class ContainerFilmsPresenter {
     const movies = this.movies.map((movie) => this.#createPaireMovieComment(movie));
     const movieCount = movies.length;
 
-    this.#renderFilter();
+    const filtersPresenter = new FiltersPresenter(this.#placeContainer, this.#handlerViewAction);
+    console.log(filtersPresenter);
+    filtersPresenter.init();
+    this.#renderSort();
 
     if (movieCount === 0) {
       this.#renderNoMovie();
@@ -126,7 +153,7 @@ export default class ContainerFilmsPresenter {
     this.#moviePresenters.forEach((presenter) => presenter.destroy());
     this.#moviePresenters.clear();
 
-    remove(this.#filter);
+    remove(this.#sort);
     remove(this.#noMovieText);
     remove(this.#loadMoreButton);
 
