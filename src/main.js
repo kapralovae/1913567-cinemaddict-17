@@ -11,9 +11,7 @@ const main = document.querySelector('main');
 const movieModel = new MovieModel();
 const commentsModal = new CommentsModel(movieModel);
 const filtersModal = new FiltersModel();
-// const filtersPresenter = new FiltersPresenter(main);
 const containerFilmsPresenter = new ContainerFilmsPresenter(main, document.body, movieModel,commentsModal, filtersModal);
 render(new NewRankUserView(), headerLogo);
 
 containerFilmsPresenter.init();
-// filtersPresenter.init();

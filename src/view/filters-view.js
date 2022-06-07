@@ -26,7 +26,6 @@ export default class NewFiltersView extends AbstractView {
 
   #hadndlerClickWatchlist = (evt) => {
     evt.preventDefault();
-    console.log(evt.target.getAttribute('href').replace('#', ''));
     this._callback.filterWatchlistClick(evt.target.getAttribute('href').replace('#', ''));
   };
 

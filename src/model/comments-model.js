@@ -10,9 +10,9 @@ export default class CommentsModel extends Observable{
     });
   }
 
+  #comments = [];
   getCommentsById = (id) => this.#comments.filter((comment) => comment.id === id);
 
-  #comments = [];
 
   get comment() { return this.#comments;}
 

@@ -98,9 +98,7 @@ export const genetateCardMovie = () => {
   const id = nanoid();
   return {
     'id': id,
-    'comments': [
-      // ...commentsModal.getCommentsById(id)
-    ],
+    'comments': [],
     'filmInfo': {
       'title': titleFilm[getRandomInt(0, 4)],
       'alternative_title': 'Laziness Who Sold Themselves',

@@ -1,4 +1,4 @@
-import { render } from '../framework/render';
+import { remove, render } from '../framework/render';
 import NewFiltersView from '../view/filters-view';
 import { RenderPosition } from '../framework/render';
 import { UserAction } from '../const';
@@ -19,6 +19,10 @@ export default class FiltersPresenter {
     render(this.#filters, this.#placeFiltersContainer, RenderPosition.BEFOREBEGIN);
     this.#filters.handlerClickFilterWatchlist(this.#hadndlerClickWatchlistFilter);
   }
+
+  removeFilters = () => {
+    remove(this.#filters);
+  };
 
   #hadndlerClickWatchlistFilter = (selectedType) => {
     this.#changeData(
