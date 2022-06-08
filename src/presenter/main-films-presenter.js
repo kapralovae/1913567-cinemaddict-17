@@ -24,19 +24,19 @@ export default class ContainerFilmsPresenter {
   #renderedMovie = SHOW_FILM_COUNT_STEP;
   #moviePresenters = new Map();
   #commentsModal = null;
-  #filtersModal = null;
+  #filtersModel = null;
   #filtersPresenter = null;
 
-  constructor(placeContainer, placePopupContainer, movieModel, commentsModal, filtersModal) {
+  constructor(placeContainer, placePopupContainer, movieModel, commentsModal, filtersModel) {
     this.#placeContainer = placeContainer;
     this.#placePopupContainer = placePopupContainer;
     this.#movieModel = movieModel;
     this.#commentsModal = commentsModal;
-    this.#filtersModal = filtersModal;
+    this.#filtersModel = filtersModel;
 
     this.#movieModel.addObserver(this.#handleModelEvent);
     this.#commentsModal.addObserver(this.#handleModelCommentsEvent);
-    this.#filtersModal.addObserver(this.#handleModelFiltersEvent);
+    this.#filtersModel.addObserver(this.#handleModelFiltersEvent);
   }
 
   get movies() {
@@ -44,6 +44,7 @@ export default class ContainerFilmsPresenter {
   }
 
   #handlerViewAction = (actionType, updateType, update) => {
+    console.log(actionType, updateType, update);
     switch (actionType) {
       case UserAction.UPDATE_MOVIE:
         this.#movieModel.updateMovie(updateType, update);
@@ -52,15 +53,25 @@ export default class ContainerFilmsPresenter {
         this.#commentsModal.deleteComment(updateType, update);
         break;
       case UserAction.FILTER_MOVIE:
-        this.#filtersModal.changeFilter(updateType, update);
+        this.#filtersModel.changeFilter(updateType, update);
         break;
     }
   };
+  /*
+    1) Если попап не открыт, перерисовать доску
+    2) Если попап открыть перерисовать доску после закрытия
+    3) Доделать 2 другие кнопки
+    4) Кнопка лоадморе не должна перерисовывать доску при нажатии на кнопку
+  */
 
   #handleModelEvent = (updateType, updatedMovie) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#moviePresenters.get(updatedMovie.id).init(updatedMovie, true);
+        this.#moviePresenters.get(updatedMovie.id).init(updatedMovie, true, true);
+        break;
+      case 'test':
+        console.log('123');
+        this.#handleModelFiltersEvent('MAJOR', this.#filtersModel.selectFilter);
         break;
     }
   };
@@ -80,16 +91,18 @@ export default class ContainerFilmsPresenter {
   };
 
   #handleModelFiltersEvent = (updateType, updatedFilters) => {
+    console.log(updatedFilters, 'из мейна');
+    // this.#moviePresenters.get(updatedMovie.id).init(updatedMovie, true);
     const filterMovie = this.movies.filter((movie) => movie.userDetails[updatedFilters]);
     switch (updateType) {
       case UpdateType.MAJOR:
         this.#clearBoardFilms(true, true);
+
         if (updatedFilters === 'all') {
           this.init();
           return;
         }
-
-        this.#renderBoardFilms(filterMovie);
+        this.#renderBoardFilms(filterMovie, updatedFilters);
         break;
     }
   };
@@ -122,12 +135,12 @@ export default class ContainerFilmsPresenter {
     return {...movie, comments: commentsForFilm};
   };
 
-  #renderBoardFilms = (renderMovies) => {
+  #renderBoardFilms = (renderMovies, currentFilter = 'All_movies') => {
     const movies = renderMovies.map((movie) => this.#createPaireMovieComment(movie));
     const movieCount = renderMovies.length;
 
-    this.#filtersPresenter = new FiltersPresenter(this.#placeContainer, this.#handlerViewAction);
-    this.#filtersPresenter.init();
+    this.#filtersPresenter = new FiltersPresenter(this.#placeContainer, currentFilter, this.#handlerViewAction);
+    this.#filtersPresenter.init(this.#movieModel.movie);
     this.#renderSort();
 
     if (movieCount === 0) {
@@ -146,9 +159,9 @@ export default class ContainerFilmsPresenter {
 
   #clearBoardFilms = (resetRenderedMovieCount = false, resetSortType = false) => {
     const movieCount = this.movies.length;
-
     this.#moviePresenters.forEach((presenter) => presenter.destroy());
     this.#moviePresenters.clear();
+
 
     this.#filtersPresenter.removeFilters();
     remove(this.#sort);
@@ -177,10 +190,10 @@ export default class ContainerFilmsPresenter {
   };
 
 
-  #handlerLoadMoreButtonClick = (param) => {
-    const movieCount = param.length;
+  #handlerLoadMoreButtonClick = (renderMoreMovie) => {
+    const movieCount = renderMoreMovie.length;
     const newRenderedMovieCount = Math.min(movieCount, this.#renderedMovie + SHOW_FILM_COUNT_STEP);
-    const movies = param.slice(this.#renderedMovie, newRenderedMovieCount);
+    const movies = renderMoreMovie.slice(this.#renderedMovie, newRenderedMovieCount);
     const moviesWithComments = movies.map((movie) => this.#createPaireMovieComment(movie));
     this.#renderMovies(moviesWithComments);
     this.#renderedMovie = newRenderedMovieCount;

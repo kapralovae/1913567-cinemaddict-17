@@ -8,10 +8,12 @@ import FiltersModel from './model/filters-model.js';
 
 const headerLogo = document.querySelector('.header');
 const main = document.querySelector('main');
+
 const movieModel = new MovieModel();
 const commentsModal = new CommentsModel(movieModel);
 const filtersModal = new FiltersModel();
 const containerFilmsPresenter = new ContainerFilmsPresenter(main, document.body, movieModel,commentsModal, filtersModal);
+
 render(new NewRankUserView(), headerLogo);
 
 containerFilmsPresenter.init();

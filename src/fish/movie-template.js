@@ -117,7 +117,7 @@ export const genetateCardMovie = () => {
       'description': description[getRandomInt(0, 4)],
     },
     'userDetails': {
-      'watchlist': Math.random() >0.5 ? true : false,
+      'watchlist': true,
       'alreadyWatched': Math.random() >0.5 ? true : false,
       'watchingDate': '2019-04-12T16:12:32.554Z',
       'favorite': Math.random() >0.5 ? true : false,

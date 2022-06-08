@@ -1,9 +1,9 @@
 import Observable from '../framework/observable';
 
 export default class FiltersModel extends Observable {
-  #currentFilter = null;
+  #currentFilter = 'All_movies';
 
-  constructor(currentFilter = 'All_movies') {
+  constructor(currentFilter) {
     super();
     this.#currentFilter = currentFilter;
   }

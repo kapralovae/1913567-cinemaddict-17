@@ -21,6 +21,7 @@ export default class MoviePresenter {
     this.#modalOpennedCallback = modalOpennedCallback;
   }
 
+
   init = (movie, reinit = false) => {
     this.#movie = movie;
     const prevMovieComponent = this.#movieComponent;
@@ -86,16 +87,24 @@ export default class MoviePresenter {
     this.#modalOpened = false;
     this.#popupComponent.element.remove();
     this.#popupComponent.removeElement();
+    this.#changeData(
+      UserAction.UPDATE_MOVIE,
+      // UpdateType.PATCH,
+      'test',
+      {...this.#movie},
+    );
   };
 
   #handlerWatchlistClick = () => {
+    console.log('watch', this.#movie);
     this.popupScrollPosition = this.#popupComponent.element.scrollTop;
     this.#popupComponent.element.scroll({
       top : this.popupScrollPosition,
     });
     this.#changeData(
       UserAction.UPDATE_MOVIE,
-      UpdateType.PATCH,
+      // UpdateType.PATCH,
+      this.#modalOpened ? UpdateType.PATCH : 'test',
       {...this.#movie, userDetails: {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist}},
     );
   };
