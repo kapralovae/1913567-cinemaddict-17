@@ -23,6 +23,7 @@ const UserAction = {
   ADD_COMMENT: 'ADD_COMMENT',
   DELETE_COMMENT: 'DELETE_COMMENT',
   FILTER_MOVIE : 'FILTER_MOVIE',
+  CLOSE_POPUP: 'CLOSE_POPUP',
 };
 
 const UpdateType = {

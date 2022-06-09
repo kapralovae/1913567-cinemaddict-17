@@ -19,6 +19,7 @@ export default class MovieModel extends Observable {
       ...this.#movies.slice(index + 1),
     ];
 
+
     this._notify(updateType, update);
   };
 

@@ -12,13 +12,15 @@ export default class MoviePresenter {
   #movie = null;
   #modalOpened = false;
   #modalOpennedCallback = null;
+  #movies = null;
 
 
-  constructor(containerListFilm, placePopupContainer, changeData, modalOpennedCallback) {
+  constructor(containerListFilm, placePopupContainer, changeData, modalOpennedCallback, movies) {
     this.#containerListFilm = containerListFilm;
     this.#placePopupContainer = placePopupContainer;
     this.#changeData = changeData;
     this.#modalOpennedCallback = modalOpennedCallback;
+    this.#movies = movies;
   }
 
 
@@ -88,23 +90,21 @@ export default class MoviePresenter {
     this.#popupComponent.element.remove();
     this.#popupComponent.removeElement();
     this.#changeData(
-      UserAction.UPDATE_MOVIE,
+      UserAction.CLOSE_POPUP,
       // UpdateType.PATCH,
-      'test',
-      {...this.#movie},
+      UpdateType.MINOR,
+      this.#movies,
     );
   };
 
   #handlerWatchlistClick = () => {
-    console.log('watch', this.#movie);
     this.popupScrollPosition = this.#popupComponent.element.scrollTop;
     this.#popupComponent.element.scroll({
       top : this.popupScrollPosition,
     });
     this.#changeData(
       UserAction.UPDATE_MOVIE,
-      // UpdateType.PATCH,
-      this.#modalOpened ? UpdateType.PATCH : 'test',
+      this.#modalOpened ? UpdateType.PATCH : UpdateType.MINOR,
       {...this.#movie, userDetails: {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist}},
     );
   };
@@ -116,7 +116,7 @@ export default class MoviePresenter {
     });
     this.#changeData(
       UserAction.UPDATE_MOVIE,
-      UpdateType.PATCH,
+      this.#modalOpened ? UpdateType.PATCH : UpdateType.MINOR,
       {...this.#movie, userDetails: {...this.#movie.userDetails, alreadyWatched: !this.#movie.userDetails.alreadyWatched}},
     );
   };
@@ -128,7 +128,7 @@ export default class MoviePresenter {
     });
     this.#changeData(
       UserAction.UPDATE_MOVIE,
-      UpdateType.PATCH,
+      this.#modalOpened ? UpdateType.PATCH : UpdateType.MINOR,
       {...this.#movie, userDetails: {...this.#movie.userDetails, favorite: !this.#movie.userDetails.favorite}},
     );
   };
