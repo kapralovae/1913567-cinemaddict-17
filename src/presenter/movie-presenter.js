@@ -1,3 +1,4 @@
+import { UpdateType, UserAction } from '../const.js';
 import { remove, render, replace } from '../framework/render.js';
 import NewCardFilmView from '../view/card-film-view.js';
 import NewPopupFilmView from '../view/popup-film-view.js';
@@ -11,14 +12,17 @@ export default class MoviePresenter {
   #movie = null;
   #modalOpened = false;
   #modalOpennedCallback = null;
+  #movies = null;
 
 
-  constructor(containerListFilm, placePopupContainer, changeData, modalOpennedCallback) {
+  constructor(containerListFilm, placePopupContainer, changeData, modalOpennedCallback, movies) {
     this.#containerListFilm = containerListFilm;
     this.#placePopupContainer = placePopupContainer;
     this.#changeData = changeData;
     this.#modalOpennedCallback = modalOpennedCallback;
+    this.#movies = movies;
   }
+
 
   init = (movie, reinit = false) => {
     this.#movie = movie;
@@ -27,14 +31,11 @@ export default class MoviePresenter {
     this.#movieComponent = new NewCardFilmView(movie);
     this.#popupComponent = new NewPopupFilmView(movie);
 
-    this.#movieComponent.setClickHandler(()=>{
+    this.#movieComponent.setClickHandler(() => {
       this.#modalOpennedCallback();
       this.#modalOpened = true;
       render(this.#popupComponent, this.#placePopupContainer);
       this.setOpenModalHandlers();
-      // const position = this.#popupComponent.position();
-      // this.#popupComponent.scrollPosition(position);
-      // console.log(position);
     });
 
     if (this.#modalOpened === true && reinit === true) {
@@ -65,11 +66,13 @@ export default class MoviePresenter {
     remove(prevPopupComponent);
   };
 
+
   setOpenModalHandlers = () => {
     this.#popupComponent.setWatchlistClickHandler(this.#handlerWatchlistClick);
     this.#popupComponent.setAllredyWatchedClickHandler(this.#handlerAllredyWatchedClick);
     this.#popupComponent.setFavoritesClickHandler(this.#handlerFavoritesClick);
     this.#popupComponent.setClickCloseHandler(this.#onCloseButtonPopupClick);
+    this.#popupComponent.setClickDeleteMessageHandler(this.#handlerDeleteMessageClick);
   };
 
   resetModal = () => {
@@ -86,20 +89,57 @@ export default class MoviePresenter {
     this.#modalOpened = false;
     this.#popupComponent.element.remove();
     this.#popupComponent.removeElement();
+    this.#changeData(
+      UserAction.CLOSE_POPUP,
+      // UpdateType.PATCH,
+      UpdateType.MINOR,
+      this.#movies,
+    );
   };
 
   #handlerWatchlistClick = () => {
     this.popupScrollPosition = this.#popupComponent.element.scrollTop;
-    this.#changeData({...this.#movie, userDetails: {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist}});
+    this.#popupComponent.element.scroll({
+      top : this.popupScrollPosition,
+    });
+    this.#changeData(
+      UserAction.UPDATE_MOVIE,
+      this.#modalOpened ? UpdateType.PATCH : UpdateType.MINOR,
+      {...this.#movie, userDetails: {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist}},
+    );
   };
 
   #handlerAllredyWatchedClick = () => {
     this.popupScrollPosition = this.#popupComponent.element.scrollTop;
-    this.#changeData({...this.#movie, userDetails: {...this.#movie.userDetails, alreadyWatched: !this.#movie.userDetails.alreadyWatched}});
+    this.#popupComponent.element.scroll({
+      top : this.popupScrollPosition,
+    });
+    this.#changeData(
+      UserAction.UPDATE_MOVIE,
+      this.#modalOpened ? UpdateType.PATCH : UpdateType.MINOR,
+      {...this.#movie, userDetails: {...this.#movie.userDetails, alreadyWatched: !this.#movie.userDetails.alreadyWatched}},
+    );
   };
 
   #handlerFavoritesClick = () => {
     this.popupScrollPosition = this.#popupComponent.element.scrollTop;
-    this.#changeData({...this.#movie, userDetails: {...this.#movie.userDetails, favorite: !this.#movie.userDetails.favorite}});
+    this.#popupComponent.element.scroll({
+      top : this.popupScrollPosition,
+    });
+    this.#changeData(
+      UserAction.UPDATE_MOVIE,
+      this.#modalOpened ? UpdateType.PATCH : UpdateType.MINOR,
+      {...this.#movie, userDetails: {...this.#movie.userDetails, favorite: !this.#movie.userDetails.favorite}},
+    );
   };
+
+  #handlerDeleteMessageClick = (idUniq) => {
+    this.#changeData(
+      UserAction.DELETE_COMMENT,
+      UpdateType.MINOR,
+      {id : this.#movie.id,
+        idUniq},
+    );
+  };
+
 }

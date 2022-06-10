@@ -1,5 +1,4 @@
 import { getRandomInt } from '../util.js';
-import CommentsModel from '../model/comments-model.js';
 import { humanizeDate } from '../util.js';
 import { nanoid } from 'nanoid';
 
@@ -94,16 +93,12 @@ const getRuntime = (offer) => {
   return runtime[getRandomInt(0, runtime.length - 1)];
 };
 
-const commentsList = new CommentsModel();
-
 
 export const genetateCardMovie = () => {
   const id = nanoid();
   return {
     'id': id,
-    'comments': [
-      ...commentsList.getCommentsById(id)
-    ],
+    'comments': [],
     'filmInfo': {
       'title': titleFilm[getRandomInt(0, 4)],
       'alternative_title': 'Laziness Who Sold Themselves',
@@ -122,10 +117,10 @@ export const genetateCardMovie = () => {
       'description': description[getRandomInt(0, 4)],
     },
     'userDetails': {
-      'watchlist': false,
-      'alreadyWatched': true,
+      'watchlist': true,
+      'alreadyWatched': Math.random() >0.5 ? true : false,
       'watchingDate': '2019-04-12T16:12:32.554Z',
-      'favorite': false,
+      'favorite': Math.random() >0.5 ? true : false,
     }
   };
 };
