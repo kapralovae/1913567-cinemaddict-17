@@ -12,15 +12,13 @@ export default class MoviePresenter {
   #movie = null;
   #modalOpened = false;
   #modalOpennedCallback = null;
-  #movies = null;
 
-
-  constructor(containerListFilm, placePopupContainer, changeData, modalOpennedCallback, movies) {
+  constructor(containerListFilm, placePopupContainer, changeData, modalOpennedCallback, movie) {
     this.#containerListFilm = containerListFilm;
     this.#placePopupContainer = placePopupContainer;
     this.#changeData = changeData;
     this.#modalOpennedCallback = modalOpennedCallback;
-    this.#movies = movies;
+    this.#movie = movie;
   }
 
 
@@ -91,17 +89,20 @@ export default class MoviePresenter {
     this.#popupComponent.removeElement();
     this.#changeData(
       UserAction.CLOSE_POPUP,
-      // UpdateType.PATCH,
       UpdateType.MINOR,
-      this.#movies,
+      this.#movie,
     );
   };
 
-  #handlerWatchlistClick = () => {
+  #saveScrollPosition = () => {
     this.popupScrollPosition = this.#popupComponent.element.scrollTop;
     this.#popupComponent.element.scroll({
       top : this.popupScrollPosition,
     });
+  };
+
+  #handlerWatchlistClick = () => {
+    this.#saveScrollPosition();
     this.#changeData(
       UserAction.UPDATE_MOVIE,
       this.#modalOpened ? UpdateType.PATCH : UpdateType.MINOR,
@@ -110,10 +111,7 @@ export default class MoviePresenter {
   };
 
   #handlerAllredyWatchedClick = () => {
-    this.popupScrollPosition = this.#popupComponent.element.scrollTop;
-    this.#popupComponent.element.scroll({
-      top : this.popupScrollPosition,
-    });
+    this.#saveScrollPosition();
     this.#changeData(
       UserAction.UPDATE_MOVIE,
       this.#modalOpened ? UpdateType.PATCH : UpdateType.MINOR,
@@ -122,10 +120,7 @@ export default class MoviePresenter {
   };
 
   #handlerFavoritesClick = () => {
-    this.popupScrollPosition = this.#popupComponent.element.scrollTop;
-    this.#popupComponent.element.scroll({
-      top : this.popupScrollPosition,
-    });
+    this.#saveScrollPosition();
     this.#changeData(
       UserAction.UPDATE_MOVIE,
       this.#modalOpened ? UpdateType.PATCH : UpdateType.MINOR,
@@ -134,6 +129,7 @@ export default class MoviePresenter {
   };
 
   #handlerDeleteMessageClick = (idUniq) => {
+    this.#saveScrollPosition();
     this.#changeData(
       UserAction.DELETE_COMMENT,
       UpdateType.MINOR,

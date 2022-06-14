@@ -30,6 +30,7 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };
 
 export {SortType, UserAction, UpdateType, FilterType, FilterMapType};

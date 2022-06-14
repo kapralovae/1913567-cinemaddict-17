@@ -1,28 +1,46 @@
-import { generateComment } from '../fish/comment-template.js';
+// import { generateComment } from '../fish/comment-template.js.js';
 import Observable from '../framework/observable.js';
+import { UpdateType } from '../const.js';
 
 export default class CommentsModel extends Observable{
+  #movieModel = null;
+  #moviesApiService = null;
 
-  constructor(movieModel) {
+  constructor(movieModel, moviesApiService) {
     super();
-    movieModel.movie.forEach((element) => {
-      this.#createCommentsFilmById(element.id);
-    });
+    this.#movieModel = movieModel;
+    this.#moviesApiService = moviesApiService;
+    // movieModel.movie.forEach((element) => {
+    //   this.#createCommentsFilmById(element.id);
+    // });
+    // console.log(this.#movieModel);
   }
 
   #comments = [];
-  getCommentsById = (id) => this.#comments.filter((comment) => comment.id === id);
+  // getCommentsById = (id) => this.#comments.filter((comment) => comment.id === id);
 
 
   get comment() { return this.#comments;}
 
-  #createCommentsFilmById = (id) => {
-
-    for (let i = 0; i < 10; i++) {
-
-      this.#comments.push(generateComment(id));
+  init = async () => {
+    // console.log();
+    try {
+      const comments = await this.#moviesApiService.getComments(this.#movieModel.movie);
+      this.#comments = comments;
+    } catch(err) {
+      this.#comments = [];
     }
+    console.log(await this.#moviesApiService.getTestAll());
+    this._notify(UpdateType.INIT);
   };
+
+  // #createCommentsFilmById = (id) => {
+
+  //   for (let i = 0; i < 10; i++) {
+
+  //     this.#comments.push(generateComment(id));
+  //   }
+  // };
 
   addComment = (updateType, update) => {
     this.#comments = [

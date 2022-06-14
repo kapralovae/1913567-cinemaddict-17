@@ -26,7 +26,7 @@ const createCardFilm = (movie) => {
       <p class="film-card__info">
         <span class="film-card__year">${humanizeDate(filmInfo.release.date)}</span>
         <span class="film-card__duration">${filmInfo.runtime}</span>
-        <span class="film-card__genre">${filmInfo.genre}</span>
+        <span class="film-card__genre">${filmInfo.genre[0]}</span>
       </p>
       <img src="./${filmInfo.poster}" alt="" class="film-card__poster">
       <p class="film-card__description">${filmInfo.description}</p>
