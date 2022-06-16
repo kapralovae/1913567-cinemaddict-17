@@ -22,16 +22,30 @@ export default class CommentsModel extends Observable{
 
   get comment() { return this.#comments;}
 
-  init = async () => {
+  init =  async () => {
     // console.log();
     try {
-      const comments = await this.#moviesApiService.getComments(this.#movieModel.movie);
-      this.#comments = comments;
+      const moviesId = [];
+      this.#movieModel.movie.forEach((movie) => {
+        moviesId.push(movie.id);
+      });
+      // const comments = await this.#moviesApiService.getTestAll(moviesId);
+      // this.#comments = comments;
+      // let test = null;
+      const commentsFetch = await this.#moviesApiService.getTestAll(moviesId);
+      for (let i = 0; i < commentsFetch.length; i++) {
+        const commentsByMovie = commentsFetch[i].comments;
+        this.#comments.push(...commentsByMovie);
+      }
+      // this.#comments.push(commentsFetch.forEach((comments) => comments.comments));
+
+      // const comments = await this.#moviesApiService.getComments(this.#movieModel.movie);
+      // this.#comments = comments;
     } catch(err) {
       this.#comments = [];
     }
-    console.log(await this.#moviesApiService.getTestAll());
-    this._notify(UpdateType.INIT);
+    console.log(this.comment);
+    this._notify(UpdateType.INITCOMMENT);
   };
 
   // #createCommentsFilmById = (id) => {

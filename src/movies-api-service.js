@@ -23,36 +23,26 @@ export default class MoviesApiService extends ApiService {
   getTest = (idMovie) => this._load({url: `comments/${idMovie}`})
     .then(ApiService.parseResponse);
 
-  getTestAll = async () => {
-    const arr = [1,2,3,4,5];//id filmov dlya commentov
+  getTestAll = async (moviesId) => {
+    // const arr = [1,2,3,4,5];//id filmov dlya commentov
+    //  console.log(await movieId[1]);
+    // const reluslts = {};
     const reluslts = [];
-    for (let i = 0; i < arr.length;i++) {
-      const id = arr[i];
+    for (let i = 0; i < moviesId.length;i++) {
+      const id = moviesId[i];
       const commentById = await this.getTest(id);
-      reluslts.push(commentById);
+      // reluslts[id] = commentById;
+      reluslts.push({id: id, comments: commentById});
+      //  this.getTest(id)
+      //   .then((commentById) => {
+      //     reluslts[id] = commentById;
+      //     // for (let j = 0; j < commentById.length; j++) {
+      //     // }
+      //   });
+      // reluslts.push({id: id, comments: commentById});
     }
     return reluslts;
   };
-
-  /*
-    0) Дописать адаптер для комментариев фильма
-    1) В моделе комментариев собрать все id фильмов
-    2) Используя id из п.1 вызвать getTestAll передать все id
-    3) Результат работы getTestAll заполнить модель данных
-  */
-  // getComments() {
-
-  //   const arr = [];
-  //   let qwer = null;
-  //   for (let i = 0; i < this.movies.length; i++) {
-  //     qwer = this._load({url: `comments/${i}`})//return this._load({url: `comments/${this.movies.id}`})
-  //       .then(ApiService.parseResponse);
-  //     arr.push(qwer);
-  //   }
-  //   console.log(arr);
-  //   return arr;
-  // }
-
 
   updatedMovie = async (movie) => {
     const response = await this._load({

@@ -24,7 +24,7 @@ export default class ContainerFilmsPresenter {
   #movieModel = null;
   #renderedMovie = SHOW_FILM_COUNT_STEP;
   #moviePresenters = new Map();
-  #commentsModal = null;
+  #commentsModel = null;
   #filtersModel = null;
   #filtersPresenter = null;
   #filterType = 'all';
@@ -32,15 +32,15 @@ export default class ContainerFilmsPresenter {
   #isLoading = true;
 
 
-  constructor(placeContainer, placePopupContainer, movieModel, commentsModal, filtersModel) {
+  constructor(placeContainer, placePopupContainer, movieModel, commentsModel, filtersModel) {
     this.#placeContainer = placeContainer;
     this.#placePopupContainer = placePopupContainer;
-    this.#movieModel = movieModel;
-    this.#commentsModal = commentsModal;
     this.#filtersModel = filtersModel;
+    this.#movieModel = movieModel;
+    this.#commentsModel = commentsModel;
 
     this.#movieModel.addObserver(this.#handleModelEvent);
-    this.#commentsModal.addObserver(this.#handleModelCommentsEvent);
+    this.#commentsModel.addObserver(this.#handleModelCommentsEvent);
     this.#filtersModel.addObserver(this.#handleModelFiltersEvent);
   }
 
@@ -54,7 +54,7 @@ export default class ContainerFilmsPresenter {
         this.#movieModel.updateMovie(updateType, update);
         break;
       case UserAction.DELETE_COMMENT:
-        this.#commentsModal.deleteComment(updateType, update);
+        this.#commentsModel.deleteComment(updateType, update);
         break;
       case UserAction.FILTER_MOVIE:
         this.#filtersModel.changeFilter(updateType, update);
@@ -75,7 +75,7 @@ export default class ContainerFilmsPresenter {
         break;
       case UpdateType.INIT:
         this.#isLoading = false;
-        this.init();
+        // this.init();
         break;
     }
   };
@@ -85,10 +85,13 @@ export default class ContainerFilmsPresenter {
       case UpdateType.PATCH:
         break;
       case UpdateType.MINOR:
-        const movie = this.movies.find((currentMovie) => currentMovie.id === updatedComments.id);
+        console.log('tut');
+          const movie = this.movies.find((currentMovie) => currentMovie.id === updatedComments.id);
+          console.log(updatedComments);
         this.#moviePresenters.get(updatedComments.id).init(movie, true);
         break;
-      case UpdateType.MAJOR:
+      case UpdateType.INITCOMMENT:
+        this.init();
         break;
     }
   };
@@ -126,7 +129,7 @@ export default class ContainerFilmsPresenter {
   };
 
   #renderMovie = (movie) => {
-    const moviePresenter = new MoviePresenter(this.#containerListFilm.element, this.#placePopupContainer, this.#handlerViewAction, this.#handleModalOpenned, movie);
+    const moviePresenter = new MoviePresenter(this.#containerListFilm.element, this.#placePopupContainer, this.#handlerViewAction, this.#handleModalOpenned, movie, this.#commentsModel.comment);
     moviePresenter.init(movie);
     this.#moviePresenters.set(movie.id, moviePresenter);
   };
@@ -162,6 +165,7 @@ export default class ContainerFilmsPresenter {
     if (movieCount > this.#renderedMovie) {
       this.#renderLoadMoreButton(() => {this.#handlerLoadMoreButtonClick(renderMovies);});
     }
+
   };
 
   #clearBoardFilms = (resetRenderedMovieCount = false, resetSortType = false) => {

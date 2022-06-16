@@ -12,13 +12,15 @@ export default class MoviePresenter {
   #movie = null;
   #modalOpened = false;
   #modalOpennedCallback = null;
+  #comments = null;
 
-  constructor(containerListFilm, placePopupContainer, changeData, modalOpennedCallback, movie) {
+  constructor(containerListFilm, placePopupContainer, changeData, modalOpennedCallback, movie, comments) {
     this.#containerListFilm = containerListFilm;
     this.#placePopupContainer = placePopupContainer;
     this.#changeData = changeData;
     this.#modalOpennedCallback = modalOpennedCallback;
     this.#movie = movie;
+    this.#comments = comments;
   }
 
 
@@ -27,7 +29,7 @@ export default class MoviePresenter {
     const prevMovieComponent = this.#movieComponent;
     const prevPopupComponent = this.#popupComponent;
     this.#movieComponent = new NewCardFilmView(movie);
-    this.#popupComponent = new NewPopupFilmView(movie);
+    this.#popupComponent = new NewPopupFilmView(movie, this.#comments);
 
     this.#movieComponent.setClickHandler(() => {
       this.#modalOpennedCallback();

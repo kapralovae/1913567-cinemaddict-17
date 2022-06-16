@@ -14,16 +14,17 @@ const main = document.querySelector('main');
 
 const moviesApiService = new MoviesApiService(END_POINT, AUTHORIZATION);
 const movieModel = new MovieModel(moviesApiService);
-const filtersModal = new FiltersModel();
-const commentsModal = new CommentsModel(movieModel, moviesApiService);
-const containerFilmsPresenter = new ContainerFilmsPresenter(main, document.body, movieModel,commentsModal, filtersModal);
+const filtersModel = new FiltersModel();
+const commentsModel = new CommentsModel(movieModel, moviesApiService);
+const getData = async() => {
+  await movieModel.init();
+  await commentsModel.init();
+};
+getData();
+const containerFilmsPresenter = new ContainerFilmsPresenter(main, document.body, movieModel,commentsModel, filtersModel);
 
 render(new NewRankUserView(), headerLogo);
 
-const getData = async() => {
-  await movieModel.init();
-  commentsModal.init();
-};
-getData();
 containerFilmsPresenter.init();
+
 
