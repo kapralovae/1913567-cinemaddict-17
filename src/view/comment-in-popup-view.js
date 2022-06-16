@@ -2,7 +2,7 @@ import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeDate } from '../util.js';
 
 const createComment = (comments) => {
-  const {comment, date, emotion, author,  idUniq} = comments;
+  const {comment, date, emotion, author} = comments;
 
   return (`
   <li class="film-details__comment">
@@ -15,7 +15,7 @@ const createComment = (comments) => {
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${author}</span>
         <span class="film-details__comment-day">${humanizeDate(date)}</span>
-        <button data-comment-index=${idUniq} class="film-details__comment-delete">Delete</button>
+        <button class="film-details__comment-delete">Delete</button>
       </p>
     </div>
   </li>

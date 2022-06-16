@@ -7,6 +7,7 @@ import NewSortView from '../view/sort-view.js';
 import MoviePresenter from './movie-presenter.js';
 import {UserAction, UpdateType, SortType} from '../const.js';
 import FiltersPresenter from './filters-presenter.js';
+import LoadingView from '../view/loading-view.js';
 
 const SHOW_FILM_COUNT_STEP = 5;
 
@@ -23,21 +24,23 @@ export default class ContainerFilmsPresenter {
   #movieModel = null;
   #renderedMovie = SHOW_FILM_COUNT_STEP;
   #moviePresenters = new Map();
-  #commentsModal = null;
+  #commentsModel = null;
   #filtersModel = null;
   #filtersPresenter = null;
   #filterType = 'all';
+  #loadingComponent = new LoadingView();
+  #isLoading = true;
 
 
-  constructor(placeContainer, placePopupContainer, movieModel, commentsModal, filtersModel) {
+  constructor(placeContainer, placePopupContainer, movieModel, commentsModel, filtersModel) {
     this.#placeContainer = placeContainer;
     this.#placePopupContainer = placePopupContainer;
-    this.#movieModel = movieModel;
-    this.#commentsModal = commentsModal;
     this.#filtersModel = filtersModel;
+    this.#movieModel = movieModel;
+    this.#commentsModel = commentsModel;
 
     this.#movieModel.addObserver(this.#handleModelEvent);
-    this.#commentsModal.addObserver(this.#handleModelCommentsEvent);
+    this.#commentsModel.addObserver(this.#handleModelCommentsEvent);
     this.#filtersModel.addObserver(this.#handleModelFiltersEvent);
   }
 
@@ -51,7 +54,7 @@ export default class ContainerFilmsPresenter {
         this.#movieModel.updateMovie(updateType, update);
         break;
       case UserAction.DELETE_COMMENT:
-        this.#commentsModal.deleteComment(updateType, update);
+        this.#commentsModel.deleteComment(updateType, update);
         break;
       case UserAction.FILTER_MOVIE:
         this.#filtersModel.changeFilter(updateType, update);
@@ -70,19 +73,24 @@ export default class ContainerFilmsPresenter {
       case UpdateType.MINOR:
         this.#handleModelFiltersEvent('MAJOR', this.#filterType, false);
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        // this.init();
+        break;
     }
   };
 
   #handleModelCommentsEvent = (updateType, updatedComments) => {
-    const movie = this.movies.find((currentMovie) => currentMovie.id === updatedComments.id);
-    const movieWithComments = this.#createPaireMovieComment(movie);
     switch (updateType) {
       case UpdateType.PATCH:
         break;
       case UpdateType.MINOR:
-        this.#moviePresenters.get(updatedComments.id).init(movieWithComments, true);
+          const movie = this.movies.find((currentMovie) => currentMovie.id === updatedComments.id);
+          console.log(updatedComments);
+        this.#moviePresenters.get(updatedComments.id).init(movie, true);
         break;
-      case UpdateType.MAJOR:
+      case UpdateType.INITCOMMENT:
+        this.init();
         break;
     }
   };
@@ -106,6 +114,10 @@ export default class ContainerFilmsPresenter {
     this.#renderBoardFilms(this.movies);
   };
 
+  #renderLoading = () => {
+    render(this.#loadingComponent, this.#placeContainer);
+  };
+
   #renderSort = () => {
     this.#sort = new NewSortView(this.#currentSort);
     render(this.#sort, this.#placeContainer);
@@ -116,7 +128,7 @@ export default class ContainerFilmsPresenter {
   };
 
   #renderMovie = (movie) => {
-    const moviePresenter = new MoviePresenter(this.#containerListFilm.element, this.#placePopupContainer, this.#handlerViewAction, this.#handleModalOpenned, this.movies);
+    const moviePresenter = new MoviePresenter(this.#containerListFilm.element, this.#placePopupContainer, this.#handlerViewAction, this.#handleModalOpenned, movie, this.#commentsModel.comment);
     moviePresenter.init(movie);
     this.#moviePresenters.set(movie.id, moviePresenter);
   };
@@ -125,17 +137,19 @@ export default class ContainerFilmsPresenter {
     movies.forEach((movie) => this.#renderMovie(movie));
   };
 
-  #createPaireMovieComment = (movie) => {
-    const commentsForFilm = this.#commentsModal.getCommentsById(movie.id);
-    return {...movie, comments: commentsForFilm};
-  };
-
   #renderBoardFilms = (renderMovies) => {
-    const movies = renderMovies.map((movie) => this.#createPaireMovieComment(movie));
     const movieCount = renderMovies.length;
 
+    if (this.#isLoading) {
+      this.#filtersPresenter = new FiltersPresenter(this.#placeContainer, this.#filterType, this.#handlerViewAction);
+      this.#filtersPresenter.init(this.#movieModel.movie);
+      this.#renderLoading();
+      return;
+    }
+    this.#filtersPresenter.removeFilters();
     this.#filtersPresenter = new FiltersPresenter(this.#placeContainer, this.#filterType, this.#handlerViewAction);
     this.#filtersPresenter.init(this.#movieModel.movie);
+    remove(this.#loadingComponent);
     this.#renderSort();
 
     if (movieCount === 0) {
@@ -145,11 +159,12 @@ export default class ContainerFilmsPresenter {
 
     this.#renderSectionFilm();
     render(this.#containerListFilm, this.#sectioinFilms.element);
-    this.#renderMovies(movies.slice(0, Math.min(movieCount, this.#renderedMovie)));
+    this.#renderMovies(renderMovies.slice(0, Math.min(movieCount, this.#renderedMovie)));
 
     if (movieCount > this.#renderedMovie) {
       this.#renderLoadMoreButton(() => {this.#handlerLoadMoreButtonClick(renderMovies);});
     }
+
   };
 
   #clearBoardFilms = (resetRenderedMovieCount = false, resetSortType = false) => {
@@ -181,6 +196,7 @@ export default class ContainerFilmsPresenter {
   #renderNoMovie = () => {
     this.#noMovieText = new NoMovieView(this.#filtersModel.selectFilter);
     render(this.#noMovieText, this.#placeContainer);
+    remove(this.#loadingComponent);
   };
 
   #renderLoadMoreButton = (cb) => {
@@ -194,8 +210,7 @@ export default class ContainerFilmsPresenter {
     const movieCount = renderMoreMovie.length;
     const newRenderedMovieCount = Math.min(movieCount, this.#renderedMovie + SHOW_FILM_COUNT_STEP);
     const movies = renderMoreMovie.slice(this.#renderedMovie, newRenderedMovieCount);
-    const moviesWithComments = movies.map((movie) => this.#createPaireMovieComment(movie));
-    this.#renderMovies(moviesWithComments);
+    this.#renderMovies(movies);
     this.#renderedMovie = newRenderedMovieCount;
 
     if (this.#renderedMovie >= movieCount) {
