@@ -11,35 +11,15 @@ export default class MoviesApiService extends ApiService {
       .then(ApiService.parseResponse);
   }
 
-  // qwer = () => {
-  //   const arr = [];
-  //   this.movies.forEach((movie) => {
-  //     arr.push(movie.id);
-  //   });
-  //   return arr;
-
-  // };
-
-  getTest = (idMovie) => this._load({url: `comments/${idMovie}`})
+  getCommentsByMovie = (idMovie) => this._load({url: `comments/${idMovie}`})
     .then(ApiService.parseResponse);
 
-  getTestAll = async (moviesId) => {
-    // const arr = [1,2,3,4,5];//id filmov dlya commentov
-    //  console.log(await movieId[1]);
-    // const reluslts = {};
+  getAllComments = async (moviesId) => {
     const reluslts = [];
     for (let i = 0; i < moviesId.length;i++) {
       const id = moviesId[i];
-      const commentById = await this.getTest(id);
-      // reluslts[id] = commentById;
+      const commentById = await this.getCommentsByMovie(id);
       reluslts.push({id: id, comments: commentById});
-      //  this.getTest(id)
-      //   .then((commentById) => {
-      //     reluslts[id] = commentById;
-      //     // for (let j = 0; j < commentById.length; j++) {
-      //     // }
-      //   });
-      // reluslts.push({id: id, comments: commentById});
     }
     return reluslts;
   };

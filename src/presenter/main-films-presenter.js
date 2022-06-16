@@ -85,7 +85,6 @@ export default class ContainerFilmsPresenter {
       case UpdateType.PATCH:
         break;
       case UpdateType.MINOR:
-        console.log('tut');
           const movie = this.movies.find((currentMovie) => currentMovie.id === updatedComments.id);
           console.log(updatedComments);
         this.#moviePresenters.get(updatedComments.id).init(movie, true);
