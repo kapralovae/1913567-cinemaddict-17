@@ -1,4 +1,3 @@
-// import { generateComment } from '../fish/comment-template.js.js';
 import Observable from '../framework/observable.js';
 import { UpdateType } from '../const.js';
 
@@ -16,9 +15,9 @@ export default class CommentsModel extends Observable{
   get comment() { return this.#comments;}
 
   init =  async () => {
-    // console.log();
     try {
       const moviesId = [];
+      // const moviesId  = this.#movieModel.movie.map((movie) => movie.id);
       this.#movieModel.movie.forEach((movie) => {
         moviesId.push(movie.id);
       });
@@ -27,6 +26,8 @@ export default class CommentsModel extends Observable{
         const commentsByMovie = commentsFetch[i].comments;
         this.#comments.push(...commentsByMovie);
       }
+      // this.#comments = commentsFetch.map((comFetch) => comFetch.comments);
+      console.log(this.comment);
     } catch(err) {
       this.#comments = [];
     }
@@ -42,9 +43,25 @@ export default class CommentsModel extends Observable{
     this._notify(updateType, update);
   };
 
-  deleteComment = (updateType, update) => {
-    this.#comments = this.#comments.filter((comment) => comment.idUniq !== update.idUniq);
-    this._notify(updateType, update);
+  deleteComment = async (updateType, update) => {
+    console.log(update, this.#comments);
+    const index = this.#comments.findIndex((comment) => comment.id === update.deletedComment.id);
+    // this.#comments = this.#comments.filter((comment) => comment.id !== update.idUniq);
+    if (index === -1) {
+      throw new Error('Can\'t delete unexusting comment');
+    }
+    try {
+      await this.#moviesApiService.deleteComment(update.deletedComment);
+      this.#comments = [
+        ...this.#comments.slice(0, index),
+        ...this.#comments.slice(index + 1),
+      ];
+
+      this._notify(updateType, update);
+    } catch(err) {
+      throw new Error('Can\'t delete comment');
+    }
+
   };
 }
 

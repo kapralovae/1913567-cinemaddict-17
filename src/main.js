@@ -16,11 +16,11 @@ const moviesApiService = new MoviesApiService(END_POINT, AUTHORIZATION);
 const movieModel = new MovieModel(moviesApiService);
 const filtersModel = new FiltersModel();
 const commentsModel = new CommentsModel(movieModel, moviesApiService);
-const getData = async() => {
+const initData = async() => {
   await movieModel.init();
   await commentsModel.init();
 };
-getData();
+initData();
 const containerFilmsPresenter = new ContainerFilmsPresenter(main, document.body, movieModel,commentsModel, filtersModel);
 
 render(new NewRankUserView(), headerLogo);

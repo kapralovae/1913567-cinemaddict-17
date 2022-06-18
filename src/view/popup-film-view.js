@@ -154,7 +154,7 @@ export default class NewPopupFilmView extends AbstractStatefulView {
   constructor(movie, comments) {
     super();
     this.#comments = comments;
-    this._state = NewPopupFilmView.parseMovieToState(movie);
+    this._state = NewPopupFilmView.parseMovieToState(movie, comments);
     this.#setInnerHandlers();
   }
 
@@ -230,9 +230,11 @@ export default class NewPopupFilmView extends AbstractStatefulView {
     this._callback.favoritesClick();
   };
 
-  static parseMovieToState = (movie) => ({...movie,
-    commentEmoji: 'a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.',
-    emotionSelect: 'smile'});
+  static parseMovieToState = (movie, comments) => {
+    console.log(comments);
+    return ({...movie,
+      commentEmoji: 'a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.',
+      emotionSelect: 'smile'});};
 
   #setInnerHandlers = () => {
     this.element.querySelectorAll('.film-details__emoji-item').forEach((element) => {

@@ -3,6 +3,7 @@ import ApiService from './framework/api-service.js';
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
+  DELETE: 'DELETE',
 };
 
 export default class MoviesApiService extends ApiService {
@@ -24,6 +25,16 @@ export default class MoviesApiService extends ApiService {
     return reluslts;
   };
 
+  deleteComment = async (comment) => {
+    console.log(comment);
+    const response = await this._load({
+      url: `comments/${comment.id}`,
+      method: Method.DELETE,
+    });
+    console.log(response);
+    return response;
+  };
+
   updatedMovie = async (movie) => {
     const response = await this._load({
       url: `movies/${movie.id}`,
@@ -38,7 +49,7 @@ export default class MoviesApiService extends ApiService {
 
   #adaptToServer = (movie) => {
     const adaptedMovie = {...movie,
-      'film_info' : {...movie.filmInfo,
+      'film_info': {...movie.filmInfo,
         'age_rating': movie.filmInfo.ageRating,
         'total_rating': movie.filmInfo.totalRating,
         release: {
@@ -46,9 +57,9 @@ export default class MoviesApiService extends ApiService {
           'release_country': movie.filmInfo.release.releaseCountry,
         },
       },
-      'user_details' : {...movie.userDetails,
-        'already_watched' : movie.userDetails['alreadyWatched'],
-        'watching_date' : movie.userDetails['watchingDate'],
+      'user_details': {...movie.userDetails,
+        'already_watched': movie.userDetails['alreadyWatched'],
+        'watching_date': movie.userDetails['watchingDate'],
       },
     };
 

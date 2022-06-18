@@ -132,11 +132,12 @@ export default class MoviePresenter {
 
   #handlerDeleteMessageClick = (idUniq) => {
     this.#saveScrollPosition();
+    const deletedComment = this.#comments.find((comment) => comment.id === idUniq);
     this.#changeData(
       UserAction.DELETE_COMMENT,
       UpdateType.MINOR,
       {id : this.#movie.id,
-        idUniq},
+        deletedComment},
     );
   };
 

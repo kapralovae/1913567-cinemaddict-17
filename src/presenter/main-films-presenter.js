@@ -85,8 +85,10 @@ export default class ContainerFilmsPresenter {
       case UpdateType.PATCH:
         break;
       case UpdateType.MINOR:
-          const movie = this.movies.find((currentMovie) => currentMovie.id === updatedComments.id);
-          console.log(updatedComments);
+        // const movie = this.movies.find((currentMovie) => currentMovie.comments.find((comments) => comments === updatedComments.idUniq));
+        const movie = this.movies.find((currentMovie) => currentMovie.id === updatedComments.id );
+        movie.comments = movie.comments.filter((commId) => commId !== updatedComments.deletedComment.id);
+        console.log(updatedComments, movie, movie.comments);
         this.#moviePresenters.get(updatedComments.id).init(movie, true);
         break;
       case UpdateType.INITCOMMENT:
