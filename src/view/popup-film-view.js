@@ -170,6 +170,11 @@ export default class NewPopupFilmView extends AbstractStatefulView {
     this.#setInnerHandlers();
   };
 
+  setFocusTextComment = (callback) => {
+    this._callback.send = callback;
+    this.element.querySelector('.film-details__comment-input').addEventListener('focus', this.#handlerFocusTextarea);
+  };
+
   setClickDeleteMessageHandler = (callback) => {
     this._callback.delete = callback;
     this.element.querySelector('.film-details__comments-list').addEventListener('click', this.#handlerDeleteComment);
@@ -230,11 +235,9 @@ export default class NewPopupFilmView extends AbstractStatefulView {
     this._callback.favoritesClick();
   };
 
-  static parseMovieToState = (movie, comments) => {
-    console.log(comments);
-    return ({...movie,
-      commentEmoji: 'a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.',
-      emotionSelect: 'smile'});};
+  static parseMovieToState = (movie) => ({...movie,
+    commentEmoji: 'a film that changed my life, a true masterpiece, post-credit scene was just amazing omg.',
+    emotionSelect: 'smile'});
 
   #setInnerHandlers = () => {
     this.element.querySelectorAll('.film-details__emoji-item').forEach((element) => {
