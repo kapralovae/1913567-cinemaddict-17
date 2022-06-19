@@ -34,13 +34,16 @@ export default class CommentsModel extends Observable{
     this._notify(UpdateType.INITCOMMENT);
   };
 
-  addComment = (updateType, update) => {
-    this.#comments = [
-      update,
-      ...this.#comments,
-    ];
+  addComment = async (updateType, update) => {
+    console.log(update);
+    const addedComment = {...update};
+    delete addedComment['idMovie'];
+    const commentsForMovie = await this.#moviesApiService.addCommentOnServer(addedComment, update.idMovie);
 
-    this._notify(updateType, update);
+    this.#comments.push(commentsForMovie.comments[commentsForMovie.comments.length - 1]);
+
+    console.log(this.#comments);
+    this._notify(updateType, commentsForMovie);
   };
 
   deleteComment = async (updateType, update) => {

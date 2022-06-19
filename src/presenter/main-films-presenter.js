@@ -56,6 +56,9 @@ export default class ContainerFilmsPresenter {
       case UserAction.DELETE_COMMENT:
         this.#commentsModel.deleteComment(updateType, update);
         break;
+      case UserAction.ADD_COMMENT:
+        this.#commentsModel.addComment(updateType, update);
+        break;
       case UserAction.FILTER_MOVIE:
         this.#filtersModel.changeFilter(updateType, update);
         break;
@@ -83,10 +86,15 @@ export default class ContainerFilmsPresenter {
   #handleModelCommentsEvent = (updateType, updatedComments) => {
     switch (updateType) {
       case UpdateType.PATCH:
+        console.log(updatedComments);
+        const movieq = this.movies.find((currentMovie) => currentMovie.id === updatedComments.movie.id);
+        movieq.comments = updatedComments.comments;
+        this.#moviePresenters.get(updatedComments.movie.id).init(movieq, true);
         break;
       case UpdateType.MINOR:
         // const movie = this.movies.find((currentMovie) => currentMovie.comments.find((comments) => comments === updatedComments.idUniq));
         const movie = this.movies.find((currentMovie) => currentMovie.id === updatedComments.id );
+        console.log(movie.comments);
         movie.comments = movie.comments.filter((commId) => commId !== updatedComments.deletedComment.id);
         console.log(updatedComments, movie, movie.comments);
         this.#moviePresenters.get(updatedComments.id).init(movie, true);

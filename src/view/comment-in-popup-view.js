@@ -26,12 +26,12 @@ const createComment = (comments) => {
 export default class NewCommentView extends AbstractView {
 
   #comment = null;
-  #index = null;
+  // #index = null;
 
-  constructor(comment, index) {
+  constructor(comment) {
     super();
     this.#comment = comment;
-    this.#index = index;
+    // this.#index = index;
   }
 
   get template() {

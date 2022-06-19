@@ -73,6 +73,7 @@ export default class MoviePresenter {
     this.#popupComponent.setFavoritesClickHandler(this.#handlerFavoritesClick);
     this.#popupComponent.setClickCloseHandler(this.#onCloseButtonPopupClick);
     this.#popupComponent.setClickDeleteMessageHandler(this.#handlerDeleteMessageClick);
+    this.#popupComponent.setFocusTextComment(this.#handlerSendText);
   };
 
   resetModal = () => {
@@ -141,4 +142,12 @@ export default class MoviePresenter {
     );
   };
 
+  #handlerSendText = (comment) => {
+    this.#saveScrollPosition();
+    this.#changeData(
+      UserAction.ADD_COMMENT,
+      UpdateType.PATCH,
+      comment,
+    );
+  };
 }
