@@ -48,16 +48,26 @@ export default class ContainerFilmsPresenter {
     return this.#movieModel.movie;
   }
 
-  #handlerViewAction = (actionType, updateType, update) => {
+  #handlerViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_MOVIE:
         this.#movieModel.updateMovie(updateType, update);
         break;
       case UserAction.DELETE_COMMENT:
-        this.#commentsModel.deleteComment(updateType, update);
+        this.#moviePresenters.get(update.id).setDeleting(update.deletedComment.id);
+        try {
+          await this.#commentsModel.deleteComment(updateType, update);
+        } catch(err) {
+          this.#moviePresenters.get(update.id).setAborting();
+        }
         break;
       case UserAction.ADD_COMMENT:
-        this.#commentsModel.addComment(updateType, update);
+        this.#moviePresenters.get(update.idMovie).setSending();
+        try {
+          await this.#commentsModel.addComment(updateType, update);
+        } catch(err) {
+          this.#moviePresenters.get(update.idMovie).setAborting();
+        }
         break;
       case UserAction.FILTER_MOVIE:
         this.#filtersModel.changeFilter(updateType, update);
@@ -88,7 +98,7 @@ export default class ContainerFilmsPresenter {
       case UpdateType.PATCH:
         console.log(updatedComments);
         const movieq = this.movies.find((currentMovie) => currentMovie.id === updatedComments.movie.id);
-        movieq.comments = updatedComments.comments;
+        movieq.comments = updatedComments.movie.comments;
         this.#moviePresenters.get(updatedComments.movie.id).init(movieq, true);
         break;
       case UpdateType.MINOR:
@@ -96,7 +106,7 @@ export default class ContainerFilmsPresenter {
         const movie = this.movies.find((currentMovie) => currentMovie.id === updatedComments.id );
         console.log(movie.comments);
         movie.comments = movie.comments.filter((commId) => commId !== updatedComments.deletedComment.id);
-        console.log(updatedComments, movie, movie.comments);
+        // console.log(updatedComments, movie, movie.comments);
         this.#moviePresenters.get(updatedComments.id).init(movie, true);
         break;
       case UpdateType.INITCOMMENT:
@@ -138,7 +148,7 @@ export default class ContainerFilmsPresenter {
   };
 
   #renderMovie = (movie) => {
-    const moviePresenter = new MoviePresenter(this.#containerListFilm.element, this.#placePopupContainer, this.#handlerViewAction, this.#handleModalOpenned, movie, this.#commentsModel.comment);
+    const moviePresenter = new MoviePresenter(this.#containerListFilm.element, this.#placePopupContainer, this.#handlerViewAction, this.#handleModalOpenned, movie, this.#commentsModel);
     moviePresenter.init(movie);
     this.#moviePresenters.set(movie.id, moviePresenter);
   };

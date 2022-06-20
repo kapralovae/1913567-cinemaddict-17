@@ -12,15 +12,15 @@ export default class MoviePresenter {
   #movie = null;
   #modalOpened = false;
   #modalOpennedCallback = null;
-  #comments = null;
+  #commentsModel = null;
 
-  constructor(containerListFilm, placePopupContainer, changeData, modalOpennedCallback, movie, comments) {
+  constructor(containerListFilm, placePopupContainer, changeData, modalOpennedCallback, movie, commentsModel) {
     this.#containerListFilm = containerListFilm;
     this.#placePopupContainer = placePopupContainer;
     this.#changeData = changeData;
     this.#modalOpennedCallback = modalOpennedCallback;
     this.#movie = movie;
-    this.#comments = comments;
+    this.#commentsModel = commentsModel;
   }
 
 
@@ -29,7 +29,7 @@ export default class MoviePresenter {
     const prevMovieComponent = this.#movieComponent;
     const prevPopupComponent = this.#popupComponent;
     this.#movieComponent = new NewCardFilmView(movie);
-    this.#popupComponent = new NewPopupFilmView(movie, this.#comments);
+    this.#popupComponent = new NewPopupFilmView(movie, this.#commentsModel);
 
     this.#movieComponent.setClickHandler(() => {
       this.#modalOpennedCallback();
@@ -133,7 +133,7 @@ export default class MoviePresenter {
 
   #handlerDeleteMessageClick = (idUniq) => {
     this.#saveScrollPosition();
-    const deletedComment = this.#comments.find((comment) => comment.id === idUniq);
+    const deletedComment = this.#commentsModel.comment.find((comment) => comment.id === idUniq);
     this.#changeData(
       UserAction.DELETE_COMMENT,
       UpdateType.MINOR,
@@ -149,5 +149,27 @@ export default class MoviePresenter {
       UpdateType.PATCH,
       comment,
     );
+  };
+
+  setDeleting = (idComment) => {
+    this.#popupComponent.updateElement({
+      idComment: idComment,
+    });
+  };
+
+  setSending = () => {
+    this.#popupComponent.updateElement({
+      isDisable: true,
+    });
+  };
+
+  setAborting = () => {
+    const resetFormState = () => {
+      this.#popupComponent.updateElement({
+        idComment: '',
+        isDisable: false,
+      });
+    };
+    this.#popupComponent.shake(resetFormState);
   };
 }

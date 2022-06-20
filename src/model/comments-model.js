@@ -27,7 +27,6 @@ export default class CommentsModel extends Observable{
         this.#comments.push(...commentsByMovie);
       }
       // this.#comments = commentsFetch.map((comFetch) => comFetch.comments);
-      console.log(this.comment);
     } catch(err) {
       this.#comments = [];
     }
@@ -35,14 +34,12 @@ export default class CommentsModel extends Observable{
   };
 
   addComment = async (updateType, update) => {
-    console.log(update);
     const addedComment = {...update};
     delete addedComment['idMovie'];
     const commentsForMovie = await this.#moviesApiService.addCommentOnServer(addedComment, update.idMovie);
 
     this.#comments.push(commentsForMovie.comments[commentsForMovie.comments.length - 1]);
 
-    console.log(this.#comments);
     this._notify(updateType, commentsForMovie);
   };
 

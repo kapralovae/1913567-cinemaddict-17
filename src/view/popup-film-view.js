@@ -3,9 +3,8 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import NewCommentView from './comment-in-popup-view.js';
 
 const createPopupFilm = (movie, commentsArr) => {
-  const {filmInfo, emotionSelect, comments} = movie;
+  const {filmInfo, emotionSelect, comments, idComment, isDisable} = movie;
   const commentsForMovie = [];
-  console.log(comments);
   comments.forEach((commentId) => {
     commentsArr.some((commentsSome) => {
       if (commentsSome.id === commentId) {
@@ -13,7 +12,7 @@ const createPopupFilm = (movie, commentsArr) => {
       }
     });
   });
-
+console.log(isDisable);
   // const commentsForMovie = comments.forEach((commentId) => {
   //   commentsArr.includes(commentId);
   // });
@@ -112,7 +111,7 @@ const createPopupFilm = (movie, commentsArr) => {
 
           <ul class="film-details__comments-list">
             ${commentsForMovie.reduce((template, comment) => {
-      template += new NewCommentView(comment).template;
+      template += new NewCommentView(comment, idComment).template;
       return template;
     }, '')}
           </ul>
@@ -122,7 +121,7 @@ const createPopupFilm = (movie, commentsArr) => {
             </div>
 
             <label class="film-details__comment-label">
-              <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${movie.commentText}</textarea>
+              <textarea ${isDisable ? 'disabled' : ''} class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${movie.commentText}</textarea>
             </label>
 
             <div class="film-details__emoji-list">
@@ -154,16 +153,16 @@ const createPopupFilm = (movie, commentsArr) => {
 };
 
 export default class NewPopupFilmView extends AbstractStatefulView {
-  #comments = null;
-  constructor(movie, comments) {
+  #commentsModel = null;
+  constructor(movie, commentsModel) {
     super();
-    this.#comments = comments;
+    this.#commentsModel = commentsModel;
     this._state = NewPopupFilmView.parseMovieToState(movie);
     this.#setInnerHandlers();
   }
 
   get template() {
-    return createPopupFilm(this._state, this.#comments);
+    return createPopupFilm(this._state, this.#commentsModel.comment);
   }
 
 
@@ -242,7 +241,20 @@ export default class NewPopupFilmView extends AbstractStatefulView {
 
   static parseMovieToState = (movie) => ({...movie,
     commentText: '',
-    emotionSelect: 'smile'});
+    emotionSelect: 'smile',
+    idComment: '',
+    isDisable: false,
+  });
+
+  static parseStateToMovie = (state) => {
+    const movie = {...state};
+
+    delete movie.commentText;
+    delete movie.emotionSelect;
+    delete movie.isDeleting;
+
+    return movie;
+  };
 
   #setInnerHandlers = () => {
     this.element.querySelectorAll('.film-details__emoji-item').forEach((element) => {
@@ -254,7 +266,7 @@ export default class NewPopupFilmView extends AbstractStatefulView {
   #handlerClickEmoji = (evt) => {
     evt.preventDefault();
     this.popupScrollPosition = this.element.scrollTop;
-    this.lastChekedSmile = evt.target.value;
+    // this.lastChekedSmile = evt.target.value;
     this.updateElement({
       emotionSelect: evt.target.value,
     });
@@ -265,12 +277,13 @@ export default class NewPopupFilmView extends AbstractStatefulView {
     evt.preventDefault();
     console.log('123');
     this._setState({
-      // commentText: evt.target.value,
+      commentText: evt.target.value,
     });
   };
 
   #handlerDeleteComment = (evt) => {
     evt.preventDefault();
+    this.popupScrollPosition = this.element.scrollTop;
     if (evt.target.tagName === 'BUTTON') {
       this._callback.delete(evt.target.dataset.commentIndex);
     }
@@ -282,6 +295,7 @@ export default class NewPopupFilmView extends AbstractStatefulView {
     // this._setState({
     //   commentText: evt.target.value,
     // });
+    this.popupScrollPosition = this.element.scrollTop;
     if (evt.ctrlKey && evt.key ==='Enter') {
       this._callback.send({
         comment: evt.target.value,
