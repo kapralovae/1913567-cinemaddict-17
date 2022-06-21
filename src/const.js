@@ -24,6 +24,7 @@ const UserAction = {
   DELETE_COMMENT: 'DELETE_COMMENT',
   FILTER_MOVIE : 'FILTER_MOVIE',
   CLOSE_POPUP: 'CLOSE_POPUP',
+  SORT_MOVIE: 'SORT_MOVIE',
 };
 
 const UpdateType = {
@@ -32,6 +33,7 @@ const UpdateType = {
   MAJOR: 'MAJOR',
   INIT: 'INIT',
   INITCOMMENT: 'INITCOMMENT',
+  SORT: 'SORT',
 };
 
 export {SortType, UserAction, UpdateType, FilterType, FilterMapType};

@@ -1,9 +1,14 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeDate } from '../util.js';
 
-const createComment = (comments) => {
-  const {comment, date, emotion, author} = comments;
-
+const createComment = (comments, idComment) => {
+  const {comment, date, emotion, author, id} = comments;
+  const isDisabled = () => {
+    if (id === idComment) {
+      return true;
+    }
+    return false;
+  };
   return (`
   <li class="film-details__comment">
 
@@ -15,7 +20,7 @@ const createComment = (comments) => {
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${author}</span>
         <span class="film-details__comment-day">${humanizeDate(date)}</span>
-        <button class="film-details__comment-delete">Delete</button>
+        <button data-comment-index="${id}" ${isDisabled() ? 'disabled' : ''}class="film-details__comment-delete">${isDisabled() ? 'Deleting...' : 'Delete'}</button>
       </p>
     </div>
   </li>
@@ -26,27 +31,15 @@ const createComment = (comments) => {
 export default class NewCommentView extends AbstractView {
 
   #comment = null;
-  #index = null;
+  #isDisabled = null;
 
-  constructor(comment, index) {
+  constructor(comment, isDisabled) {
     super();
     this.#comment = comment;
-    this.#index = index;
+    this.#isDisabled = isDisabled;
   }
 
   get template() {
-    return createComment(this.#comment);
+    return createComment(this.#comment, this.#isDisabled);
   }
-
-  // handlerDeleteComment = (callback) => {
-  //   this._callback.deleteComment = callback;
-  //   this.element.querySelector('.film-details__comment-delete').addEventListener('click', this.#handlerDeleteButton);
-  // };
-
-  // #handlerDeleteButton = (evt) => {
-  //   evt.preventDefault();
-  //   console.log(evt.target);
-  //   //достать уникальный ид коментария и передать в делеткоммент 49строка
-  //   this._callback.deleteComment();
-  // };
 }

@@ -20,7 +20,7 @@ export default class FiltersPresenter {
   init(renderMovies) {
     const prevFilterComponents = this.#filterComponents;
     this.#filterComponents = new NewFiltersView(renderMovies, this.#currentFilter);
-    this.#filterComponents.handlerClickFilterWatchlist(this.#hadndlerClickWatchlistFilter);
+    this.#filterComponents.handlerClickFilters(this.#handlerClickOnFilter);
 
     if (prevFilterComponents === null) {
       render(this.#filterComponents, this.#placeFiltersContainer, RenderPosition.BEFOREBEGIN);
@@ -34,7 +34,7 @@ export default class FiltersPresenter {
     remove(this.#filterComponents);
   };
 
-  #hadndlerClickWatchlistFilter = (selectedType) => {
+  #handlerClickOnFilter = (selectedType) => {
     this.#changeData(
       UserAction.FILTER_MOVIE,
       UpdateType.MAJOR,

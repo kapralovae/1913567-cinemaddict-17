@@ -12,15 +12,15 @@ export default class MoviePresenter {
   #movie = null;
   #modalOpened = false;
   #modalOpennedCallback = null;
-  #comments = null;
+  #commentsModel = null;
 
-  constructor(containerListFilm, placePopupContainer, changeData, modalOpennedCallback, movie, comments) {
+  constructor(containerListFilm, placePopupContainer, changeData, modalOpennedCallback, movie, commentsModel) {
     this.#containerListFilm = containerListFilm;
     this.#placePopupContainer = placePopupContainer;
     this.#changeData = changeData;
     this.#modalOpennedCallback = modalOpennedCallback;
     this.#movie = movie;
-    this.#comments = comments;
+    this.#commentsModel = commentsModel;
   }
 
 
@@ -29,7 +29,7 @@ export default class MoviePresenter {
     const prevMovieComponent = this.#movieComponent;
     const prevPopupComponent = this.#popupComponent;
     this.#movieComponent = new NewCardFilmView(movie);
-    this.#popupComponent = new NewPopupFilmView(movie, this.#comments);
+    this.#popupComponent = new NewPopupFilmView(movie, this.#commentsModel);
 
     this.#movieComponent.setClickHandler(() => {
       this.#modalOpennedCallback();
@@ -73,6 +73,7 @@ export default class MoviePresenter {
     this.#popupComponent.setFavoritesClickHandler(this.#handlerFavoritesClick);
     this.#popupComponent.setClickCloseHandler(this.#onCloseButtonPopupClick);
     this.#popupComponent.setClickDeleteMessageHandler(this.#handlerDeleteMessageClick);
+    this.#popupComponent.setFocusTextComment(this.#handlerSendText);
   };
 
   resetModal = () => {
@@ -132,12 +133,43 @@ export default class MoviePresenter {
 
   #handlerDeleteMessageClick = (idUniq) => {
     this.#saveScrollPosition();
+    const deletedComment = this.#commentsModel.comment.find((comment) => comment.id === idUniq);
     this.#changeData(
       UserAction.DELETE_COMMENT,
       UpdateType.MINOR,
       {id : this.#movie.id,
-        idUniq},
+        deletedComment},
     );
   };
 
+  #handlerSendText = (comment) => {
+    this.#saveScrollPosition();
+    this.#changeData(
+      UserAction.ADD_COMMENT,
+      UpdateType.PATCH,
+      comment,
+    );
+  };
+
+  setDeleting = (idComment) => {
+    this.#popupComponent.updateElement({
+      idComment: idComment,
+    });
+  };
+
+  setSending = () => {
+    this.#popupComponent.updateElement({
+      isDisable: true,
+    });
+  };
+
+  setAborting = () => {
+    const resetFormState = () => {
+      this.#popupComponent.updateElement({
+        idComment: '',
+        isDisable: false,
+      });
+    };
+    this.#popupComponent.textareaShake(resetFormState);
+  };
 }

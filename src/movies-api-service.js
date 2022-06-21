@@ -3,6 +3,8 @@ import ApiService from './framework/api-service.js';
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
+  DELETE: 'DELETE',
+  POST: 'POST',
 };
 
 export default class MoviesApiService extends ApiService {
@@ -24,6 +26,26 @@ export default class MoviesApiService extends ApiService {
     return reluslts;
   };
 
+  deleteComment = async (comment) => {
+    const response = await this._load({
+      url: `comments/${comment.id}`,
+      method: Method.DELETE,
+    });
+    return response;
+  };
+
+  addCommentOnServer = async (comment, idMovie) => {
+    const response = await this._load({
+      url: `comments/${idMovie}`,
+      method: Method.POST,
+      body: JSON.stringify(comment),
+      headers: new Headers({'Content-Type': 'application/json'}),
+    });
+
+    const parsedResponse = await ApiService.parseResponse(response);
+    return parsedResponse;
+  };
+
   updatedMovie = async (movie) => {
     const response = await this._load({
       url: `movies/${movie.id}`,
@@ -38,7 +60,7 @@ export default class MoviesApiService extends ApiService {
 
   #adaptToServer = (movie) => {
     const adaptedMovie = {...movie,
-      'film_info' : {...movie.filmInfo,
+      'film_info': {...movie.filmInfo,
         'age_rating': movie.filmInfo.ageRating,
         'total_rating': movie.filmInfo.totalRating,
         release: {
@@ -46,9 +68,9 @@ export default class MoviesApiService extends ApiService {
           'release_country': movie.filmInfo.release.releaseCountry,
         },
       },
-      'user_details' : {...movie.userDetails,
-        'already_watched' : movie.userDetails['alreadyWatched'],
-        'watching_date' : movie.userDetails['watchingDate'],
+      'user_details': {...movie.userDetails,
+        'already_watched': movie.userDetails['alreadyWatched'],
+        'watching_date': movie.userDetails['watchingDate'],
       },
     };
 
