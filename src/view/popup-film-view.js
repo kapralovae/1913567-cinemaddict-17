@@ -12,11 +12,6 @@ const createPopupFilm = (movie, commentsArr) => {
       }
     });
   });
-console.log(isDisable);
-  // const commentsForMovie = comments.forEach((commentId) => {
-  //   commentsArr.includes(commentId);
-  // });
-
 
   let classActiveWatchlist = '';
   let classActiveWatched = '';
@@ -165,6 +160,14 @@ export default class NewPopupFilmView extends AbstractStatefulView {
     return createPopupFilm(this._state, this.#commentsModel.comment);
   }
 
+  textareaShake = (cb) => {
+    const textArea = this.element.querySelector('.film-details__comment-input');
+    textArea.classList.add('shake');
+    setTimeout(() => {
+      textArea.classList.remove('shake');
+      cb?.();
+    }, 2000);
+  };
 
   setClickCloseHandler = (callback) => {
     this._callback.click = callback;
@@ -259,14 +262,13 @@ export default class NewPopupFilmView extends AbstractStatefulView {
   #setInnerHandlers = () => {
     this.element.querySelectorAll('.film-details__emoji-item').forEach((element) => {
       element.addEventListener('change', this.#handlerClickEmoji);
-    });console.log('123');
+    });
     this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#handlerInputText);
   };
 
   #handlerClickEmoji = (evt) => {
     evt.preventDefault();
     this.popupScrollPosition = this.element.scrollTop;
-    // this.lastChekedSmile = evt.target.value;
     this.updateElement({
       emotionSelect: evt.target.value,
     });
@@ -275,7 +277,6 @@ export default class NewPopupFilmView extends AbstractStatefulView {
 
   #handlerInputText = (evt) => {
     evt.preventDefault();
-    console.log('123');
     this._setState({
       commentText: evt.target.value,
     });
@@ -290,11 +291,7 @@ export default class NewPopupFilmView extends AbstractStatefulView {
   };
 
   #handlerFocusTextarea = (evt) => {
-    // evt.preventDefault();
     const nowDate = dayjs().format('YYYY');
-    // this._setState({
-    //   commentText: evt.target.value,
-    // });
     this.popupScrollPosition = this.element.scrollTop;
     if (evt.ctrlKey && evt.key ==='Enter') {
       this._callback.send({

@@ -170,6 +170,6 @@ export default class MoviePresenter {
         isDisable: false,
       });
     };
-    this.#popupComponent.shake(resetFormState);
+    this.#popupComponent.textareaShake(resetFormState);
   };
 }

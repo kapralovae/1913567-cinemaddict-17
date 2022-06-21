@@ -3,7 +3,6 @@ import { humanizeDate } from '../util.js';
 
 const createComment = (comments, idComment) => {
   const {comment, date, emotion, author, id} = comments;
-console.log(idComment);
   const isDisabled = () => {
     if (id === idComment) {
       return true;
@@ -33,28 +32,14 @@ export default class NewCommentView extends AbstractView {
 
   #comment = null;
   #isDisabled = null;
-  // #index = null;
 
   constructor(comment, isDisabled) {
     super();
     this.#comment = comment;
     this.#isDisabled = isDisabled;
-    // this.#index = index;
   }
 
   get template() {
     return createComment(this.#comment, this.#isDisabled);
   }
-
-  // handlerDeleteComment = (callback) => {
-  //   this._callback.deleteComment = callback;
-  //   this.element.querySelector('.film-details__comment-delete').addEventListener('click', this.#handlerDeleteButton);
-  // };
-
-  // #handlerDeleteButton = (evt) => {
-  //   evt.preventDefault();
-  //   console.log(evt.target);
-  //   //достать уникальный ид коментария и передать в делеткоммент 49строка
-  //   this._callback.deleteComment();
-  // };
 }

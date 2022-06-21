@@ -26,15 +26,14 @@ export default class NewFiltersView extends AbstractView {
     return createFilters(this.#renderMovies, this.#currentFilter);
   }
 
-  handlerClickFilterWatchlist = (callback) => {
-    this._callback.filterWatchlistClick = callback;
-    this.element.querySelectorAll('a').forEach((link) => {link.addEventListener('click', this.#hadndlerClickWatchlist);});
-    // document.querySelector('.main-navigation').addEventListener('click', this.#hadndlerClickWatchlist);//пофиксить
+  handlerClickFilters = (callback) => {
+    this._callback.filterClick = callback;
+    this.element.querySelectorAll('a').forEach((link) => {link.addEventListener('click', this.#hadndlerClickOnFilter);});
   };
 
-  #hadndlerClickWatchlist = (evt) => {
+  #hadndlerClickOnFilter = (evt) => {
     evt.preventDefault();
-    this._callback.filterWatchlistClick(evt.target.getAttribute('href').replace('#', ''));
+    this._callback.filterClick(evt.target.getAttribute('href').replace('#', ''));
   };
 
 }

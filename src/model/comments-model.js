@@ -17,7 +17,6 @@ export default class CommentsModel extends Observable{
   init =  async () => {
     try {
       const moviesId = [];
-      // const moviesId  = this.#movieModel.movie.map((movie) => movie.id);
       this.#movieModel.movie.forEach((movie) => {
         moviesId.push(movie.id);
       });
@@ -26,7 +25,6 @@ export default class CommentsModel extends Observable{
         const commentsByMovie = commentsFetch[i].comments;
         this.#comments.push(...commentsByMovie);
       }
-      // this.#comments = commentsFetch.map((comFetch) => comFetch.comments);
     } catch(err) {
       this.#comments = [];
     }
@@ -45,7 +43,7 @@ export default class CommentsModel extends Observable{
 
   deleteComment = async (updateType, update) => {
     const index = this.#comments.findIndex((comment) => comment.id === update.deletedComment.id);
-    // this.#comments = this.#comments.filter((comment) => comment.id !== update.idUniq);
+
     if (index === -1) {
       throw new Error('Can\'t delete unexusting comment');
     }
