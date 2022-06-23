@@ -1,5 +1,5 @@
 import { remove, render, replace } from '../framework/render';
-import NewFiltersView from '../view/filters-view';
+import FiltersView from '../view/filters-view';
 import { RenderPosition } from '../framework/render';
 import { UserAction } from '../const';
 import { UpdateType } from '../const';
@@ -19,7 +19,7 @@ export default class FiltersPresenter {
 
   init(renderMovies) {
     const prevFilterComponents = this.#filterComponents;
-    this.#filterComponents = new NewFiltersView(renderMovies, this.#currentFilter);
+    this.#filterComponents = new FiltersView(renderMovies, this.#currentFilter);
     this.#filterComponents.handlerClickFilters(this.#handlerClickOnFilter);
 
     if (prevFilterComponents === null) {

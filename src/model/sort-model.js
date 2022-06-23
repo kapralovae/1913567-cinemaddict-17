@@ -8,9 +8,6 @@ export default class SortModel extends Observable {
     this.#currentSort = currentSort;
   }
 
-  // getCurrentSort = () => this.#currentSort;
-  // getKeysFilterMapType = () => Object.keys(FilterMapType).slice(1, FilterMapType.length);
-
   get selectSort () {return this.#currentSort;}
 
   changeSort = (updateType, updatedSort) => {

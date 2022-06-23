@@ -1,5 +1,3 @@
-import { render } from './framework/render.js';
-import NewRankUserView from './view/rank-user-view';
 import ContainerFilmsPresenter from './presenter/main-films-presenter.js';
 import MovieModel from './model/movie-model.js';
 import CommentsModel from './model/comments-model.js';
@@ -23,9 +21,7 @@ const initData = async() => {
   await commentsModel.init();
 };
 initData();
-const containerFilmsPresenter = new ContainerFilmsPresenter(main, document.body, movieModel,commentsModel, filtersModel, sortModel);
-
-render(new NewRankUserView(), headerLogo);
+const containerFilmsPresenter = new ContainerFilmsPresenter(main, document.body, movieModel,commentsModel, filtersModel, sortModel, headerLogo);
 
 containerFilmsPresenter.init();
 

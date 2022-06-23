@@ -1,18 +1,19 @@
 import dayjs from 'dayjs';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import NewCommentView from './comment-in-popup-view.js';
+import { getRuntime, humanizeFullDate } from '../util.js';
+import CommentInPopupView from './comment-in-popup-view.js';
 
-const createPopupFilm = (movie, commentsArr) => {
+const createPopupFilm = (movie, commentsAll, getGenre) => {
   const {filmInfo, emotionSelect, comments, idComment, isDisable} = movie;
   const commentsForMovie = [];
   comments.forEach((commentId) => {
-    commentsArr.some((commentsSome) => {
+    commentsAll.some((commentsSome) => {
       if (commentsSome.id === commentId) {
         commentsForMovie.push(commentsSome);
       }
     });
   });
-
+  const genres = getGenre(filmInfo.genre);
   let classActiveWatchlist = '';
   let classActiveWatched = '';
   let classActiveFavorite = '';
@@ -68,11 +69,11 @@ const createPopupFilm = (movie, commentsArr) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${filmInfo.release.date}</td>
+                <td class="film-details__cell">${humanizeFullDate(filmInfo.release.date)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">${filmInfo.runtime}</td>
+                <td class="film-details__cell">${getRuntime(filmInfo.runtime)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
@@ -81,9 +82,7 @@ const createPopupFilm = (movie, commentsArr) => {
               <tr class="film-details__row">
                 <td class="film-details__term">Genres</td>
                 <td class="film-details__cell">
-                  <span class="film-details__genre">${filmInfo.genre}</span>
-                  <span class="film-details__genre">${filmInfo.genre}</span>
-                  <span class="film-details__genre">${filmInfo.genre}</span></td>
+                ${genres.toString()}
               </tr>
             </table>
 
@@ -106,7 +105,7 @@ const createPopupFilm = (movie, commentsArr) => {
 
           <ul class="film-details__comments-list">
             ${commentsForMovie.reduce((template, comment) => {
-      template += new NewCommentView(comment, idComment).template;
+      template += new CommentInPopupView(comment, idComment).template;
       return template;
     }, '')}
           </ul>
@@ -147,18 +146,27 @@ const createPopupFilm = (movie, commentsArr) => {
   </section>`);
 };
 
-export default class NewPopupFilmView extends AbstractStatefulView {
+export default class PopupFilmView extends AbstractStatefulView {
   #commentsModel = null;
   constructor(movie, commentsModel) {
     super();
     this.#commentsModel = commentsModel;
-    this._state = NewPopupFilmView.parseMovieToState(movie);
+    this._state = PopupFilmView.parseMovieToState(movie);
     this.#setInnerHandlers();
   }
 
   get template() {
-    return createPopupFilm(this._state, this.#commentsModel.comment);
+    return createPopupFilm(this._state, this.#commentsModel.comment, this.#getGenre);
   }
+
+  #getGenre =  (genres) => {
+    const qwe = [];
+
+    genres.forEach((genre) => {
+      qwe.push(`<span class="film-details__genre">${genre}</span><br/>`);
+    });
+    return qwe;
+  };
 
   textareaShake = (cb) => {
     const textArea = this.element.querySelector('.film-details__comment-input');

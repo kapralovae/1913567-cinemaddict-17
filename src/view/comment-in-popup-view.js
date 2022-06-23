@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeDate } from '../util.js';
+import { humanizeCommentDate } from '../util.js';
 
 const createComment = (comments, idComment) => {
   const {comment, date, emotion, author, id} = comments;
@@ -19,7 +19,7 @@ const createComment = (comments, idComment) => {
       <p class="film-details__comment-text"> ${comment}</p>
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${author}</span>
-        <span class="film-details__comment-day">${humanizeDate(date)}</span>
+        <span class="film-details__comment-day">${humanizeCommentDate(date)}</span>
         <button data-comment-index="${id}" ${isDisabled() ? 'disabled' : ''}class="film-details__comment-delete">${isDisabled() ? 'Deleting...' : 'Delete'}</button>
       </p>
     </div>
@@ -28,7 +28,7 @@ const createComment = (comments, idComment) => {
   `);
 };
 
-export default class NewCommentView extends AbstractView {
+export default class CommentInPopupView extends AbstractView {
 
   #comment = null;
   #isDisabled = null;

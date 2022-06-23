@@ -1,7 +1,7 @@
 import { UpdateType, UserAction } from '../const.js';
 import { remove, render, replace } from '../framework/render.js';
-import NewCardFilmView from '../view/card-film-view.js';
-import NewPopupFilmView from '../view/popup-film-view.js';
+import CardFilmView from '../view/card-film-view.js';
+import PopupFilmView from '../view/popup-film-view.js';
 
 export default class MoviePresenter {
   #containerListFilm = null;
@@ -28,8 +28,8 @@ export default class MoviePresenter {
     this.#movie = movie;
     const prevMovieComponent = this.#movieComponent;
     const prevPopupComponent = this.#popupComponent;
-    this.#movieComponent = new NewCardFilmView(movie);
-    this.#popupComponent = new NewPopupFilmView(movie, this.#commentsModel);
+    this.#movieComponent = new CardFilmView(movie);
+    this.#popupComponent = new PopupFilmView(movie, this.#commentsModel);
 
     this.#movieComponent.setClickHandler(() => {
       this.#modalOpennedCallback();
@@ -38,7 +38,7 @@ export default class MoviePresenter {
       this.setOpenModalHandlers();
     });
 
-    if (this.#modalOpened === true && reinit === true) {
+    if (this.#modalOpened && reinit) {
       this.setOpenModalHandlers();
     }
 

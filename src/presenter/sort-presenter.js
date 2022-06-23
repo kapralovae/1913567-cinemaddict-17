@@ -1,5 +1,5 @@
 import { remove, render, replace } from '../framework/render';
-import NewSortView from '../view/sort-view';
+import SortView from '../view/sort-view';
 import { RenderPosition } from '../framework/render';
 import { UserAction } from '../const';
 import { UpdateType } from '../const';
@@ -19,7 +19,7 @@ export default class SortPresenter {
 
   init() {
     const prevSortComponents = this.#sortComponents;
-    this.#sortComponents = new NewSortView(this.#currentSort);
+    this.#sortComponents = new SortView(this.#currentSort);
     this.#sortComponents.handlerClickSort(this.#handlerClickOnSort);
 
     if (prevSortComponents === null) {

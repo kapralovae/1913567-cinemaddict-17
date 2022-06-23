@@ -8,7 +8,7 @@ const createSort = (currentSort) =>(`
   <li><a href="#rating" class="sort__button ${currentSort === SortType.RATING ? 'sort__button--active' : ''}">Sort by rating</a></li>
 </ul>`);
 
-export default class NewSortView extends AbstractView{
+export default class SortView extends AbstractView{
   #currentSort = null;
 
   constructor(currentSort) {

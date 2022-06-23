@@ -12,7 +12,7 @@ const createFilters = (renderMovies, currentFilter) => {
 <a href="#favorite" class="main-navigation__item ${FilterMapType[currentFilter] === FilterType.FAVORITES ? 'main-navigation__item--active' : ''}">Favorites <span class="main-navigation__item-count">${countFavoriteMovie}</span></a>
 </nav>`);};
 
-export default class NewFiltersView extends AbstractView {
+export default class FiltersView extends AbstractView {
   #renderMovies = null;
   #currentFilter = null;
 

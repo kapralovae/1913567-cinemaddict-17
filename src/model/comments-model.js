@@ -16,11 +16,11 @@ export default class CommentsModel extends Observable{
 
   init =  async () => {
     try {
-      const moviesId = [];
+      const moviesIds = [];
       this.#movieModel.movie.forEach((movie) => {
-        moviesId.push(movie.id);
+        moviesIds.push(movie.id);
       });
-      const commentsFetch = await this.#moviesApiService.getAllComments(moviesId);
+      const commentsFetch = await this.#moviesApiService.getAllComments(moviesIds);
       for (let i = 0; i < commentsFetch.length; i++) {
         const commentsByMovie = commentsFetch[i].comments;
         this.#comments.push(...commentsByMovie);

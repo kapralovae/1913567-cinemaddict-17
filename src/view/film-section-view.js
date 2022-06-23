@@ -5,7 +5,7 @@ const createSectionFilms = () => `
   <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
 </section>`;
 
-export default class NewSectionFilmsView extends AbstractView {
+export default class FilmSectionView extends AbstractView {
 
   get template() {
     return createSectionFilms();

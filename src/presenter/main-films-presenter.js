@@ -1,6 +1,6 @@
 import { remove, render } from '../framework/render.js';
-import NewSectionFilmsView from '../view/film-section.js';
-import ContainerListFilmView from '../view/film-list-container-view.js';
+import FilmSectionView from '../view/film-section-view.js';
+import FilmListContainerView from '../view/film-list-container-view.js';
 import LoadMoreButtonView from '../view/load-more-button-view.js';
 import NoMovieView from '../view/no-movie-view.js';
 import MoviePresenter from './movie-presenter.js';
@@ -9,6 +9,7 @@ import FiltersPresenter from './filters-presenter.js';
 import LoadingView from '../view/loading-view.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import SortPresenter from './sort-presenter.js';
+import RankUserView from '../view/rank-user-view.js';
 
 const SHOW_FILM_COUNT_STEP = 5;
 const TimeLimit = {
@@ -18,8 +19,8 @@ const TimeLimit = {
 
 export default class ContainerFilmsPresenter {
 
-  #sectioinFilms = new NewSectionFilmsView();
-  #containerListFilm = new ContainerListFilmView();
+  #sectioinFilms = new FilmSectionView();
+  #containerListFilm = new FilmListContainerView();
   #loadMoreButton = null;
   #noMovieText = null;
   #placeContainer = null;
@@ -36,16 +37,19 @@ export default class ContainerFilmsPresenter {
   #loadingComponent = new LoadingView();
   #isLoading = true;
   #sortModel = null;
+  #rankView = null;
+  #headerLogo = null;
   #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
 
 
-  constructor(placeContainer, placePopupContainer, movieModel, commentsModel, filtersModel, sortModel) {
+  constructor(placeContainer, placePopupContainer, movieModel, commentsModel, filtersModel, sortModel, headerLogo) {
     this.#placeContainer = placeContainer;
     this.#placePopupContainer = placePopupContainer;
     this.#filtersModel = filtersModel;
     this.#movieModel = movieModel;
     this.#commentsModel = commentsModel;
     this.#sortModel = sortModel;
+    this.#headerLogo = headerLogo;
 
     this.#movieModel.addObserver(this.#handleModelEvent);
     this.#commentsModel.addObserver(this.#handleModelCommentsEvent);
@@ -58,7 +62,8 @@ export default class ContainerFilmsPresenter {
   }
 
   #handlerViewAction = async (actionType, updateType, update) => {
-    // this.#uiBlocker.block();
+    this.#uiBlocker.block();
+    this.#rankView.init(this.#rankView, this.#headerLogo);
     switch (actionType) {
       case UserAction.UPDATE_MOVIE:
         this.#movieModel.updateMovie(updateType, update);
@@ -89,7 +94,7 @@ export default class ContainerFilmsPresenter {
         this.#handleModelFiltersEvent('MAJOR', this.#filterType, false);
         break;
     }
-    // this.#uiBlocker.unblock();
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, updatedMovie) => {
@@ -102,7 +107,6 @@ export default class ContainerFilmsPresenter {
         break;
       case UpdateType.INIT:
         this.#isLoading = false;
-        // this.init();
         break;
     }
   };
@@ -163,6 +167,7 @@ export default class ContainerFilmsPresenter {
         this.#renderBoardFilms(sortMovie, true);
         break;
     }
+
   };
 
   #sortMovie = (sortType) => {
@@ -216,11 +221,14 @@ export default class ContainerFilmsPresenter {
       this.#renderLoading();
       return;
     }
+    this.#rankView = new RankUserView(this.movies, this.#headerLogo);
+    this.#rankView.init(this.#rankView, this.#headerLogo);
+
     this.#filtersPresenter.removeFilters();
     this.#filtersPresenter = new FiltersPresenter(this.#placeContainer, this.#filterType, this.#handlerViewAction);
     this.#filtersPresenter.init(this.#movieModel.movie);
     remove(this.#loadingComponent);
-    // this.#renderSort();
+
     this.#sortPresenter.removeSort();
     this.#sortPresenter = new SortPresenter(this.#placeContainer, this.#currentSort, this.#handlerViewAction);
     this.#sortPresenter.init();

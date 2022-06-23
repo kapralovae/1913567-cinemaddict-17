@@ -1,7 +1,8 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeDate } from '../util.js';
+import { getRuntime, humanizeYearDate } from '../util.js';
 
-const createCardFilm = (movie) => {
+const createCardFilm = (movie, limitText) => {
+  // console.log(movie);
 
   const {filmInfo, id, comments} = movie;
   let classActiveWatchlist = '';
@@ -24,13 +25,14 @@ const createCardFilm = (movie) => {
       <h3 class="film-card__title">${filmInfo.title}</h3>
       <p class="film-card__rating">${filmInfo.totalRating}</p>
       <p class="film-card__info">
-        <span class="film-card__year">${humanizeDate(filmInfo.release.date)}</span>
-        <span class="film-card__duration">${filmInfo.runtime}</span>
+        <span class="film-card__year">${humanizeYearDate(filmInfo.release.date)}</span>
+        <span class="film-card__duration">${getRuntime(filmInfo.runtime)}</span>
         <span class="film-card__genre">${filmInfo.genre[0]}</span>
       </p>
       <img src="./${filmInfo.poster}" alt="" class="film-card__poster">
       <p class="film-card__description">${filmInfo.description}</p>
       <span class="film-card__comments">${comments.length} comments</span>
+
     </a>
     <div class="film-card__controls">
       <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${classActiveWatchlist}" type="button">Add to watchlist</button>
@@ -39,8 +41,8 @@ const createCardFilm = (movie) => {
     </div>
   </article>`);
 };
-
-export default class NewCardFilmView extends AbstractView{
+const MAX_LENGTH = 140;
+export default class CardFilmView extends AbstractView{
 
   #movie = null;
 
@@ -50,10 +52,18 @@ export default class NewCardFilmView extends AbstractView{
   }
 
   get template() {
-    return createCardFilm(this.#movie);
+    return createCardFilm(this.#movie, this.#limitText);
   }
 
   getMovieForView = () => this.#movie;
+
+  #limitText = () => {
+    const descriotion = this.element.querySelector('.film-card__description');
+    descriotion.text(descriotion.text().replace(/(\n|\r|\f)/g, ' '));
+    descriotion.html(descriotion.text().replace(/(.{100}).{0,}/, '$1... <a href="/">Подробнее</a>'));
+    // return (text.length > MAX_LENGTH) ? text.slice(0, MAX_LENGTH) : text;
+
+  };
 
   setClickHandler = (callback) => {
     this._callback.click = callback;

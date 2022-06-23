@@ -1,3 +1,19 @@
+const Rank = {
+  novice: {
+    name: 'novice',
+    min: 1,
+    max: 10,
+  },
+  fan: {
+    name: 'fan',
+    min: 11,
+    max: 20,
+  },
+  movieBuff: {
+    name: 'movie buff',
+    min: 21
+  },
+};
 const FilterType = {
   ALL_MOVIES: 'All_movies',
   WATCHLIST: 'Watchlist',
@@ -36,4 +52,4 @@ const UpdateType = {
   SORT: 'SORT',
 };
 
-export {SortType, UserAction, UpdateType, FilterType, FilterMapType};
+export {Rank, SortType, UserAction, UpdateType, FilterType, FilterMapType};
