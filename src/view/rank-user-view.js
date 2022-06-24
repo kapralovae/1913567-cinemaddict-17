@@ -1,5 +1,4 @@
 import { Rank } from '../const';
-import { remove, render, replace } from '../framework/render';
 import AbstractView from '../framework/view/abstract-view';
 
 const createRankUser = (getRank, renderMovies) => (
@@ -10,8 +9,6 @@ const createRankUser = (getRank, renderMovies) => (
 
 export default class RankUserView extends AbstractView {
   #renderMovies = null;
-  #rankComponent = null;
-  #prevRankComponent = null;
 
   constructor(renderMovies) {
     super();
@@ -22,21 +19,6 @@ export default class RankUserView extends AbstractView {
     return createRankUser(this.#getRank, this.#renderMovies);
   }
 
-  init = (rankView, containerRank) => {
-    this.#prevRankComponent = this.#rankComponent;
-    this.#rankComponent = rankView;
-    console.log(rankView, this.#prevRankComponent);
-
-    if (this.#prevRankComponent === null) {
-      render (rankView, containerRank);
-      return;
-    }
-
-    if (containerRank.contains(this.#prevRankComponent.element)) {
-      replace(this.#rankComponent, this.#prevRankComponent);
-    }
-    remove(this.#prevRankComponent);
-  };
 
   #getRank = (renderMovies) => {
     let rank = null;

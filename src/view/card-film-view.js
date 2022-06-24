@@ -1,8 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { getRuntime, humanizeYearDate } from '../util.js';
 
-const createCardFilm = (movie, limitText) => {
-  // console.log(movie);
+const createCardFilm = (movie,) => {
 
   const {filmInfo, id, comments} = movie;
   let classActiveWatchlist = '';
@@ -17,7 +16,7 @@ const createCardFilm = (movie, limitText) => {
   if (movie.userDetails.favorite) {
     classActiveFavorite = 'film-card__controls-item--active';
   }
-
+  const MAX_LENGTH = 137;
   return (`
   <article class="film-card">
     <a class="film-card__link">
@@ -30,9 +29,8 @@ const createCardFilm = (movie, limitText) => {
         <span class="film-card__genre">${filmInfo.genre[0]}</span>
       </p>
       <img src="./${filmInfo.poster}" alt="" class="film-card__poster">
-      <p class="film-card__description">${filmInfo.description}</p>
+      <p class="film-card__description">${filmInfo.description.substring(0, MAX_LENGTH)}...</p>
       <span class="film-card__comments">${comments.length} comments</span>
-
     </a>
     <div class="film-card__controls">
       <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${classActiveWatchlist}" type="button">Add to watchlist</button>
@@ -41,7 +39,7 @@ const createCardFilm = (movie, limitText) => {
     </div>
   </article>`);
 };
-const MAX_LENGTH = 140;
+
 export default class CardFilmView extends AbstractView{
 
   #movie = null;
@@ -58,10 +56,9 @@ export default class CardFilmView extends AbstractView{
   getMovieForView = () => this.#movie;
 
   #limitText = () => {
+    const regular = /\*{0,39}/;
     const descriotion = this.element.querySelector('.film-card__description');
-    descriotion.text(descriotion.text().replace(/(\n|\r|\f)/g, ' '));
-    descriotion.html(descriotion.text().replace(/(.{100}).{0,}/, '$1... <a href="/">Подробнее</a>'));
-    // return (text.length > MAX_LENGTH) ? text.slice(0, MAX_LENGTH) : text;
+    descriotion.text(descriotion.text().split(regular));
 
   };
 

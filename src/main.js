@@ -8,8 +8,8 @@ import SortModel from './model/sort-model.js';
 const AUTHORIZATION = 'Basic hbvjlhb553345klhb3kl45';
 const END_POINT = 'https://17.ecmascript.pages.academy/cinemaddict';
 
-const headerLogo = document.querySelector('.header');
-const main = document.querySelector('main');
+const headerElement = document.querySelector('.header');
+const mainElement = document.querySelector('main');
 
 const moviesApiService = new MoviesApiService(END_POINT, AUTHORIZATION);
 const movieModel = new MovieModel(moviesApiService);
@@ -21,7 +21,7 @@ const initData = async() => {
   await commentsModel.init();
 };
 initData();
-const containerFilmsPresenter = new ContainerFilmsPresenter(main, document.body, movieModel,commentsModel, filtersModel, sortModel, headerLogo);
+const containerFilmsPresenter = new ContainerFilmsPresenter(mainElement, document.body, movieModel,commentsModel, filtersModel, sortModel, headerElement);
 
 containerFilmsPresenter.init();
 

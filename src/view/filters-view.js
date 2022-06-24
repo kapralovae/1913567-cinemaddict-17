@@ -6,10 +6,10 @@ const createFilters = (renderMovies, currentFilter) => {
   const countAlreadyWatchedMovie = renderMovies.filter((movie) => movie.userDetails['alreadyWatched']).length;
   const countFavoriteMovie = renderMovies.filter((movie) => movie.userDetails['favorite']).length;
   return (`<nav class="main-navigation">
-<a href="#all" class="main-navigation__item ${FilterMapType[currentFilter] === FilterType.ALL_MOVIES ? 'main-navigation__item--active' : ''} ">All movies</a>
-<a href="#watchlist" class="main-navigation__item ${FilterMapType[currentFilter] === FilterType.WATCHLIST ? 'main-navigation__item--active' : ''}">Watchlist <span class="main-navigation__item-count">${countWatchlistMovie}</span></a>
-<a href="#alreadyWatched" class="main-navigation__item ${FilterMapType[currentFilter] === FilterType.HISTORY ? 'main-navigation__item--active' : ''}">History <span class="main-navigation__item-count">${countAlreadyWatchedMovie}</span></a>
-<a href="#favorite" class="main-navigation__item ${FilterMapType[currentFilter] === FilterType.FAVORITES ? 'main-navigation__item--active' : ''}">Favorites <span class="main-navigation__item-count">${countFavoriteMovie}</span></a>
+<a href="#all" data-type-filter="all" class="main-navigation__item ${FilterMapType[currentFilter] === FilterType.ALL_MOVIES ? 'main-navigation__item--active' : ''} ">All movies</a>
+<a href="#watchlist" data-type-filter="watchlist" class="main-navigation__item ${FilterMapType[currentFilter] === FilterType.WATCHLIST ? 'main-navigation__item--active' : ''}">Watchlist <span data-type-filter="watchlist" class="main-navigation__item-count">${countWatchlistMovie}</span></a>
+<a href="#alreadyWatched" data-type-filter="alreadyWatched" class="main-navigation__item ${FilterMapType[currentFilter] === FilterType.HISTORY ? 'main-navigation__item--active' : ''}">History <span data-type-filter="alreadyWatched" class="main-navigation__item-count">${countAlreadyWatchedMovie}</span></a>
+<a href="#favorite" data-type-filter="favorite" class="main-navigation__item ${FilterMapType[currentFilter] === FilterType.FAVORITES ? 'main-navigation__item--active' : ''}">Favorites <span data-type-filter="favorite" class="main-navigation__item-count">${countFavoriteMovie}</span></a>
 </nav>`);};
 
 export default class FiltersView extends AbstractView {
@@ -33,7 +33,7 @@ export default class FiltersView extends AbstractView {
 
   #hadndlerClickOnFilter = (evt) => {
     evt.preventDefault();
-    this._callback.filterClick(evt.target.getAttribute('href').replace('#', ''));
+    this._callback.filterClick(evt.target.dataset.typeFilter);
   };
 
 }

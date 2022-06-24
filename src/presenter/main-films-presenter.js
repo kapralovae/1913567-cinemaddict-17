@@ -9,7 +9,7 @@ import FiltersPresenter from './filters-presenter.js';
 import LoadingView from '../view/loading-view.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import SortPresenter from './sort-presenter.js';
-import RankUserView from '../view/rank-user-view.js';
+import RankPresenter from './rank-presenter.js';
 
 const SHOW_FILM_COUNT_STEP = 5;
 const TimeLimit = {
@@ -37,7 +37,7 @@ export default class ContainerFilmsPresenter {
   #loadingComponent = new LoadingView();
   #isLoading = true;
   #sortModel = null;
-  #rankView = null;
+  #rankPresenter = null;
   #headerLogo = null;
   #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
 
@@ -63,7 +63,6 @@ export default class ContainerFilmsPresenter {
 
   #handlerViewAction = async (actionType, updateType, update) => {
     this.#uiBlocker.block();
-    this.#rankView.init(this.#rankView, this.#headerLogo);
     switch (actionType) {
       case UserAction.UPDATE_MOVIE:
         this.#movieModel.updateMovie(updateType, update);
@@ -85,6 +84,7 @@ export default class ContainerFilmsPresenter {
         }
         break;
       case UserAction.FILTER_MOVIE:
+        this.#sortModel.changeSort(updateType, SortType.DEFAULT);
         this.#filtersModel.changeFilter(updateType, update);
         break;
       case UserAction.SORT_MOVIE:
@@ -138,9 +138,9 @@ export default class ContainerFilmsPresenter {
   #handleModelFiltersEvent = (updateType, updatedFilters, resetRenderedMovieCount = true) => {
     const filterMovie = this.movies.filter((movie) => movie.userDetails[updatedFilters]);
     this.#filterType = updatedFilters;
+    this.#clearBoardFilms(resetRenderedMovieCount);
     switch (updateType) {
       case UpdateType.MAJOR:
-        this.#clearBoardFilms(resetRenderedMovieCount);
         if (updatedFilters === 'all') {
           this.init();
           return;
@@ -151,33 +151,36 @@ export default class ContainerFilmsPresenter {
   };
 
   #handleModelSortEvent = (updateType, updatedSort, resetRenderedMovieCount = true) => {
-    const sortMovie = this.#sortMovie(updatedSort);
+    let sortMovie = null;
+    if (this.#filterType !== 'all') {
+      const filterMovie = this.movies.filter((movie) => movie.userDetails[this.#filterType]);
+      sortMovie = this.#sortMovie(updatedSort, filterMovie);
+    }else {
+      sortMovie = this.#sortMovie(updatedSort);
+    }
     this.#currentSort = updatedSort;
+    this.#clearBoardFilms(resetRenderedMovieCount);
     switch (updatedSort) {
       case SortType.DEFAULT:
-        this.#clearBoardFilms(resetRenderedMovieCount);
+        this.#filtersModel.changeFilter(updateType.MAJOR, 'all');
         this.init();
         break;
       case SortType.DATE:
-        this.#clearBoardFilms(resetRenderedMovieCount);
         this.#renderBoardFilms(sortMovie, true);
         break;
       case SortType.RATING:
-        this.#clearBoardFilms(resetRenderedMovieCount);
         this.#renderBoardFilms(sortMovie, true);
         break;
     }
 
   };
 
-  #sortMovie = (sortType) => {
-    const moviq = [...this.movies];
+  #sortMovie = (sortType, movies = this.movies) => {
     if (sortType === SortType.DATE) {
-
-      return moviq.sort((a, b) => (a.filmInfo.release.date < b.filmInfo.release.date) ? 1 : -1);
+      return movies.sort((a, b) => (a.filmInfo.release.date < b.filmInfo.release.date) ? 1 : -1);
     }
     if (sortType === SortType.RATING) {
-      return moviq.sort((a, b) => (a.filmInfo.totalRating < b.filmInfo.totalRating) ? 1 : -1);
+      return movies.sort((a, b) => (a.filmInfo.totalRating < b.filmInfo.totalRating) ? 1 : -1);
     }
 
     this.#currentSort = sortType;
@@ -221,8 +224,8 @@ export default class ContainerFilmsPresenter {
       this.#renderLoading();
       return;
     }
-    this.#rankView = new RankUserView(this.movies, this.#headerLogo);
-    this.#rankView.init(this.#rankView, this.#headerLogo);
+    this.#rankPresenter = new RankPresenter(this.#headerLogo);
+    this.#rankPresenter.init(this.movies);
 
     this.#filtersPresenter.removeFilters();
     this.#filtersPresenter = new FiltersPresenter(this.#placeContainer, this.#filterType, this.#handlerViewAction);
@@ -253,9 +256,10 @@ export default class ContainerFilmsPresenter {
     this.#moviePresenters.forEach((presenter) => presenter.destroy());
     this.#moviePresenters.clear();
 
-
+    this.#rankPresenter.removeRank();
     this.#filtersPresenter.removeFilters();
     this.#sortPresenter.removeSort();
+
     remove(this.#noMovieText);
     remove(this.#loadMoreButton);
 

@@ -82,7 +82,7 @@ const createPopupFilm = (movie, commentsAll, getGenre) => {
               <tr class="film-details__row">
                 <td class="film-details__term">Genres</td>
                 <td class="film-details__cell">
-                ${genres.toString()}
+                ${genres.reduce((genrePrev, genreCurrens) => genrePrev + genreCurrens )}
               </tr>
             </table>
 
