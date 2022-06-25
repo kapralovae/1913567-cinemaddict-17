@@ -18,11 +18,11 @@ export default class MoviesApiService extends ApiService {
 
   getAllComments = async (moviesId) => {
     const reluslts = [];
-    for (let i = 0; i < moviesId.length;i++) {
-      const id = moviesId[i];
-      const commentById = await this.getCommentsByMovie(id);
-      reluslts.push({id: id, comments: commentById});
+    for(const movieId of moviesId) {
+      const commentById = await this.getCommentsByMovie(movieId);
+      reluslts.push({id: movieId, comments: commentById});
     }
+
     return reluslts;
   };
 

@@ -21,8 +21,8 @@ export default class CommentsModel extends Observable{
         moviesIds.push(movie.id);
       });
       const commentsFetch = await this.#moviesApiService.getAllComments(moviesIds);
-      for (let i = 0; i < commentsFetch.length; i++) {
-        const commentsByMovie = commentsFetch[i].comments;
+      for (const commentFetch of commentsFetch) {
+        const commentsByMovie = commentFetch.comments;
         this.#comments.push(...commentsByMovie);
       }
     } catch(err) {

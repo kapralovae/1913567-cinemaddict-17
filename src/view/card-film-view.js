@@ -16,7 +16,7 @@ const createCardFilm = (movie,) => {
   if (movie.userDetails.favorite) {
     classActiveFavorite = 'film-card__controls-item--active';
   }
-  const MAX_LENGTH = 137;
+  const MAX_LENGTH = 140;
   return (`
   <article class="film-card">
     <a class="film-card__link">
@@ -29,7 +29,7 @@ const createCardFilm = (movie,) => {
         <span class="film-card__genre">${filmInfo.genre[0]}</span>
       </p>
       <img src="./${filmInfo.poster}" alt="" class="film-card__poster">
-      <p class="film-card__description">${filmInfo.description.substring(0, MAX_LENGTH)}...</p>
+      <p class="film-card__description">${filmInfo.description.length > MAX_LENGTH ? filmInfo.description.slice(0, MAX_LENGTH).concat('...'): filmInfo.description}</p>
       <span class="film-card__comments">${comments.length} comments</span>
     </a>
     <div class="film-card__controls">

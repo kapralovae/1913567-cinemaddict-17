@@ -4,12 +4,7 @@ import he from 'he';
 
 const createComment = (comments, idComment) => {
   const {comment, date, emotion, author, id} = comments;
-  const isDisabled = () => {
-    if (id === idComment) {
-      return true;
-    }
-    return false;
-  };
+  const isDisabled = () => id === idComment;
   return (`
   <li class="film-details__comment">
 

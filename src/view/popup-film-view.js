@@ -80,7 +80,7 @@ const createPopupFilm = (movie, commentsAll, getGenre) => {
                 <td class="film-details__cell">${filmInfo.release.releaseCountry}</td>
               </tr>
               <tr class="film-details__row">
-                <td class="film-details__term">Genres</td>
+                <td class="film-details__term">${(filmInfo.genre.length > 1) ? 'Genres' : 'Genre'}</td>
                 <td class="film-details__cell">
                 ${genres.reduce((genrePrev, genreCurrens) => genrePrev + genreCurrens )}
               </tr>
@@ -163,7 +163,7 @@ export default class PopupFilmView extends AbstractStatefulView {
     const qwe = [];
 
     genres.forEach((genre) => {
-      qwe.push(`<span class="film-details__genre">${genre}</span><br/>`);
+      qwe.push(`<span class="film-details__genre">${genre}</span>`);
     });
     return qwe;
   };

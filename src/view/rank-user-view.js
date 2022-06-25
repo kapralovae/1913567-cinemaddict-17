@@ -22,7 +22,7 @@ export default class RankUserView extends AbstractView {
 
   #getRank = (renderMovies) => {
     let rank = null;
-    const countWatchlistMovie = renderMovies.filter((movie) => movie.userDetails['watchlist']).length;
+    const countWatchlistMovie = renderMovies.filter((movie) => movie.userDetails['alreadyWatched']).length;
     if (countWatchlistMovie === 0 || countWatchlistMovie === undefined) {
       return;
     }
