@@ -1,7 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { getRuntime, humanizeYearDate } from '../util.js';
 
-const createCardFilm = (movie,) => {
+const createCardFilm = (movie) => {
 
   const {filmInfo, id, comments} = movie;
   let classActiveWatchlist = '';
@@ -50,17 +50,10 @@ export default class CardFilmView extends AbstractView{
   }
 
   get template() {
-    return createCardFilm(this.#movie, this.#limitText);
+    return createCardFilm(this.#movie);
   }
 
   getMovieForView = () => this.#movie;
-
-  #limitText = () => {
-    const regular = /\*{0,39}/;
-    const descriotion = this.element.querySelector('.film-card__description');
-    descriotion.text(descriotion.text().split(regular));
-
-  };
 
   setClickHandler = (callback) => {
     this._callback.click = callback;

@@ -66,12 +66,6 @@ export default class MoviePresenter {
     remove(prevPopupComponent);
   };
 
-  copyMovie = (movie,placeRender) => {
-    const copyMovie = movie;
-    this.init(copyMovie, false, placeRender);
-  };
-
-
   setOpenModalHandlers = () => {
     this.#popupComponent.setWatchlistClickHandler(this.#handlerWatchlistClick);
     this.#popupComponent.setAllredyWatchedClickHandler(this.#handlerAllredyWatchedClick);
