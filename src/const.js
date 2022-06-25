@@ -43,6 +43,11 @@ const UserAction = {
   SORT_MOVIE: 'SORT_MOVIE',
 };
 
+const NameSection ={
+  RATING: 'Top rated',
+  COMMENTS: 'Most commented',
+};
+
 const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
@@ -52,4 +57,4 @@ const UpdateType = {
   SORT: 'SORT',
 };
 
-export {Rank, SortType, UserAction, UpdateType, FilterType, FilterMapType};
+export {Rank, SortType, UserAction, UpdateType, FilterType, FilterMapType, NameSection};

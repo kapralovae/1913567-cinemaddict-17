@@ -24,7 +24,7 @@ export default class MoviePresenter {
   }
 
 
-  init = (movie, reinit = false) => {
+  init = (movie, reinit = false, placeRender = this.#containerListFilm) => {
     this.#movie = movie;
     const prevMovieComponent = this.#movieComponent;
     const prevPopupComponent = this.#popupComponent;
@@ -47,11 +47,11 @@ export default class MoviePresenter {
     this.#movieComponent.setFavoritesClickHandler(this.#handlerFavoritesClick);
 
     if (prevMovieComponent === null || prevPopupComponent === null) {
-      render (this.#movieComponent, this.#containerListFilm);
+      render (this.#movieComponent, placeRender);
       return;
     }
 
-    if (this.#containerListFilm.contains(prevMovieComponent.element)) {
+    if (placeRender.contains(prevMovieComponent.element)) {
       replace(this.#movieComponent, prevMovieComponent);
     }
 
@@ -64,6 +64,11 @@ export default class MoviePresenter {
 
     remove(prevMovieComponent);
     remove(prevPopupComponent);
+  };
+
+  copyMovie = (movie,placeRender) => {
+    const copyMovie = movie;
+    this.init(copyMovie, false, placeRender);
   };
 
 
